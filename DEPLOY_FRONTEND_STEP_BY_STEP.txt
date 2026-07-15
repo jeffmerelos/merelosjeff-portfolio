@@ -1,0 +1,235 @@
+╔════════════════════════════════════════════════════════════════════════════════╗
+║         🚀 DEPLOY FRONTEND - STEP BY STEP (10 MINUTES)                         ║
+╚════════════════════════════════════════════════════════════════════════════════╝
+
+
+⚠️ CURRENT STATUS
+═══════════════════════════════════════════════════════════════════════════════
+
+❌ Frontend NOT deployed (why you see 404)
+✅ Backend IS deployed
+✅ Database IS connected
+
+
+🎯 WHAT WE'RE DOING
+═══════════════════════════════════════════════════════════════════════════════
+
+Deploying your Next.js frontend to Vercel so your portfolio website appears
+instead of the 404 error.
+
+
+📋 STEP 1: Go to Vercel Dashboard (30 seconds)
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Open browser
+2. Visit: https://vercel.com/dashboard
+3. Log in with your GitHub account (if not already)
+4. You should see your backend project listed
+
+
+📋 STEP 2: Create New Project (2 minutes)
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Click "Add New" button (top right)
+2. Select "Project" from dropdown
+3. Click "Import Git Repository"
+4. You'll see your repositories listed
+5. Find and click: merelosjeff-portfolio
+6. Once selected, you'll see project configuration
+
+
+📋 STEP 3: Configure Root Directory (IMPORTANT!)
+═══════════════════════════════════════════════════════════════════════════════
+
+THIS IS THE MOST IMPORTANT STEP!
+
+1. Look for "Root Directory" setting
+2. It probably says "/" or is empty
+3. Click on it and select: "frontend"
+
+❌ WRONG: Leave it as "/" or empty
+✅ CORRECT: Select "frontend"
+
+If you don't see this option:
+- Look for "Advanced" or "Project Settings"
+- Find "Root Directory" setting
+- Change it to "frontend"
+
+
+📋 STEP 4: Click Deploy (10 seconds)
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Scroll down to bottom
+2. Click big blue "Deploy" button
+3. Wait for deployment to start
+
+
+📋 STEP 5: Wait for Build (5-10 minutes)
+═══════════════════════════════════════════════════════════════════════════════
+
+Vercel will:
+  1. Install npm packages
+  2. Build Next.js app
+  3. Deploy to servers
+
+You'll see progress:
+  🔄 Queued
+  🔄 Building...
+  🔄 Ready
+  ✅ Ready (deployed)
+
+Wait for GREEN CHECKMARK ✅
+
+
+📋 STEP 6: Add Environment Variables (2 minutes)
+═══════════════════════════════════════════════════════════════════════════════
+
+After deployment completes:
+
+1. In your Vercel project, click "Settings" tab
+2. Click "Environment Variables" in left menu
+3. Click "Add New" button
+4. Add these 4 variables:
+
+   VARIABLE 1:
+   Name:  NEXT_PUBLIC_API_URL
+   Value: https://merelosjeff-portfolio-backend.vercel.app
+   Check: Production ✓ Preview ✓ Development ✓
+   Click: Add
+
+   VARIABLE 2:
+   Name:  NEXT_PUBLIC_SITE_URL
+   Value: https://merelosjeff-portfolio.vercel.app
+   Check: Production ✓ Preview ✓ Development ✓
+   Click: Add
+
+   VARIABLE 3:
+   Name:  NEXT_PUBLIC_SITE_NAME
+   Value: Jeff Developer
+   Check: Production ✓ Preview ✓ Development ✓
+   Click: Add
+
+   VARIABLE 4:
+   Name:  NEXT_PUBLIC_GITHUB_USERNAME
+   Value: jeffdev
+   Check: Production ✓ Preview ✓ Development ✓
+   Click: Add
+
+
+📋 STEP 7: Redeploy with New Variables (1-2 minutes)
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Click "Deployments" tab
+2. Find the latest deployment (should be at top)
+3. Click the three dots (⋯) on the right
+4. Click "Redeploy"
+5. Wait for green checkmark again
+
+
+📋 STEP 8: Test Your Website (30 seconds)
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Visit: https://merelosjeff-portfolio.vercel.app/
+2. You should see your portfolio homepage!
+
+If you see:
+  ✅ Homepage with profile → SUCCESS!
+  ✅ Navigation menu → SUCCESS!
+  ✅ Projects section → SUCCESS!
+  ✅ Skills displaying → SUCCESS!
+  ❌ Still showing 404 → See troubleshooting below
+
+
+🆘 TROUBLESHOOTING
+═════════════════════════════════════════════════════════════════════════════
+
+PROBLEM: Still showing 404 error
+
+CHECK 1: Is deployment complete?
+  - Go to Deployments tab
+  - Do you see GREEN CHECKMARK ✅?
+  - If not, wait more (builds take 5-10 minutes)
+
+CHECK 2: Is Root Directory correct?
+  - Click Settings → General
+  - Look for "Root Directory"
+  - Should be: "frontend"
+  - If wrong, update and redeploy
+
+CHECK 3: Are environment variables set?
+  - Click Settings → Environment Variables
+  - Do you see all 4 variables?
+  - If not, add them and redeploy
+
+CHECK 4: Did you redeploy after adding variables?
+  - Go to Deployments
+  - Click the deployment with the variables
+  - If it's before you added variables, redeploy
+
+IF STILL NOT WORKING:
+  - Hard refresh: Ctrl+Shift+R (Windows) or Cmd+Shift+R (Mac)
+  - Wait 5 minutes
+  - Clear browser cache
+  - Try a different browser
+  - Check Vercel logs: Deployments → Latest → Logs
+
+
+✅ FINAL CHECKLIST
+═════════════════════════════════════════════════════════════════════════════
+
+- [ ] Went to Vercel dashboard
+- [ ] Created new project
+- [ ] Selected your GitHub repo
+- [ ] Set Root Directory to "frontend"
+- [ ] Clicked Deploy
+- [ ] Waited for green checkmark
+- [ ] Added 4 environment variables
+- [ ] Redeploy triggered
+- [ ] Waited for second green checkmark
+- [ ] Visited https://merelosjeff-portfolio.vercel.app/
+- [ ] See portfolio (not 404)
+
+
+🎉 SUCCESS SIGNS
+═════════════════════════════════════════════════════════════════════════════
+
+When working correctly, you'll see:
+
+  ✅ Your name/profile on homepage
+  ✅ Navigation menu (Home, About, Projects, etc.)
+  ✅ Your profile picture/avatar
+  ✅ Project cards loading
+  ✅ Skills displaying with categories
+  ✅ Contact form visible
+  ✅ All interactive and no errors
+
+
+📊 YOUR ARCHITECTURE (AFTER DEPLOYMENT)
+═════════════════════════════════════════════════════════════════════════════
+
+Visitor
+  ↓
+https://merelosjeff-portfolio.vercel.app/ (Frontend - Next.js)
+  ↓
+Displays your portfolio UI
+  ↓
+Calls: https://merelosjeff-portfolio-backend.vercel.app/api/...
+  ↓
+Gets data from Supabase PostgreSQL
+  ↓
+Shows your profile, projects, skills, etc.
+
+
+🚀 YOU'RE ALMOST DONE!
+═════════════════════════════════════════════════════════════════════════════
+
+Follow these steps and your portfolio will be LIVE on the web!
+
+Everyone will see your beautiful portfolio website at:
+https://merelosjeff-portfolio.vercel.app/
+
+═════════════════════════════════════════════════════════════════════════════
+
+Questions? Check the detailed guide: FIX_FRONTEND_404_ERROR.md
+
+Ready? Let's deploy! 🚀
