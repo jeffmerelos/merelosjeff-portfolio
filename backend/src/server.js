@@ -63,25 +63,82 @@ if (process.env.NODE_ENV !== 'test') {
   app.use(morgan(process.env.NODE_ENV === 'development' ? 'dev' : 'combined'));
 }
 
-// ─── Health check & root ──────────────────────────────────────────────────────────
-app.get('/', (req, res) => {
-  res.json({
-    success: true,
-    message: 'CV Portfolio Backend API',
-    status: 'running',
-    endpoints: {
-      health: '/health',
-      profile: '/api/profile',
-      projects: '/api/projects',
-      skills: '/api/skills',
-      experience: '/api/experience',
-      blog: '/api/blog',
-      certifications: '/api/certifications',
-      testimonials: '/api/testimonials',
-      contact: '/api/contact',
-      github: '/api/github'
-    }
-  });
+// ─── Health check & root dashboard ────────────────────────────────────────────────────
+app.get('/', async (req, res, next) => {
+  try {
+    const { supabase } = require('./config/database');
+
+    // Fetch profile data
+    const { data: profileData, error: profileError } = await supabase
+      .from('profile')
+      .select('*')
+      .limit(1)
+      .single();
+
+    // Fetch skills
+    const { data: skillsData, error: skillsError } = await supabase
+      .from('skills')
+      .select('*')
+      .order('category')
+      .order('sort_order');
+
+    // Fetch projects
+    const { data: projectsData, error: projectsError } = await supabase
+      .from('projects')
+      .select(`
+        id,
+        slug,
+        title,
+        tagline,
+        category,
+        is_featured,
+        cover_image_url
+      `)
+      .order('is_pinned', { ascending: false })
+      .order('sort_order', { ascending: true })
+      .limit(5);
+
+    // Fetch testimonials
+    const { data: testimonialsData, error: testimonialsError } = await supabase
+      .from('testimonials')
+      .select('*')
+      .eq('is_featured', true)
+      .order('sort_order')
+      .limit(3);
+
+    res.json({
+      success: true,
+      message: 'CV Portfolio Backend API',
+      status: 'running',
+      environment: process.env.NODE_ENV || 'development',
+      timestamp: new Date().toISOString(),
+      data: {
+        profile: profileError ? null : profileData,
+        skills: skillsError ? [] : skillsData || [],
+        recentProjects: projectsError ? [] : projectsData || [],
+        testimonials: testimonialsError ? [] : testimonialsData || []
+      },
+      endpoints: {
+        health: '/health',
+        profile: '/api/profile',
+        projects: '/api/projects',
+        skills: '/api/skills',
+        experience: '/api/experience',
+        blog: '/api/blog',
+        certifications: '/api/certifications',
+        testimonials: '/api/testimonials',
+        contact: '/api/contact',
+        github: '/api/github'
+      }
+    });
+  } catch (err) {
+    res.json({
+      success: false,
+      error: err.message,
+      timestamp: new Date().toISOString(),
+      message: 'Error loading dashboard data'
+    });
+  }
 });
 
 app.get('/health', (req, res) => {
