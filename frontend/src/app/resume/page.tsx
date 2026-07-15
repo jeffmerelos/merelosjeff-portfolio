@@ -15,7 +15,10 @@ export default function ResumePage() {
   useEffect(() => {
     Promise.all([
       getProfile(),
-      getExperience({ type: 'all' }),
+      Promise.all([
+        getExperience('work'),
+        getExperience('education')
+      ]).then(([workExp, eduExp]) => [...workExp, ...eduExp]),
       getSkills()
     ])
       .then(([profileData, experienceData, skillsData]) => {
