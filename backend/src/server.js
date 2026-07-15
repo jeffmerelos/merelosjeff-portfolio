@@ -63,7 +63,27 @@ if (process.env.NODE_ENV !== 'test') {
   app.use(morgan(process.env.NODE_ENV === 'development' ? 'dev' : 'combined'));
 }
 
-// ─── Health check ──────────────────────────────────────────────────────────
+// ─── Health check & root ──────────────────────────────────────────────────────────
+app.get('/', (req, res) => {
+  res.json({
+    success: true,
+    message: 'CV Portfolio Backend API',
+    status: 'running',
+    endpoints: {
+      health: '/health',
+      profile: '/api/profile',
+      projects: '/api/projects',
+      skills: '/api/skills',
+      experience: '/api/experience',
+      blog: '/api/blog',
+      certifications: '/api/certifications',
+      testimonials: '/api/testimonials',
+      contact: '/api/contact',
+      github: '/api/github'
+    }
+  });
+});
+
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
