@@ -9,6 +9,15 @@ const rateLimit = require('express-rate-limit');
 const { testConnection } = require('./config/database');
 const { errorHandler, notFound } = require('./middleware/errorHandler');
 
+// Suppress async operation warnings during startup
+process.on('warning', (warning) => {
+  if (warning.name === 'MaxListenersExceededWarning') {
+    // Ignore this specific warning
+    return;
+  }
+  console.warn(warning);
+});
+
 // Routes
 const profileRouter = require('./routes/profile');
 const projectsRouter = require('./routes/projects');
@@ -75,18 +84,24 @@ app.use(notFound);
 app.use(errorHandler);
 
 // ─── Start ─────────────────────────────────────────────────────────────────
-const start = async () => {
-  await testConnection();
-  app.listen(PORT, () => {
-    console.log(`\n🚀 Backend API running on http://localhost:${PORT}`);
-    console.log(`   Health: http://localhost:${PORT}/health`);
-    console.log(`   Env:    ${process.env.NODE_ENV || 'development'}\n`);
-  });
-};
+// For local development
+if (process.env.NODE_ENV !== 'production') {
+  const start = async () => {
+    try {
+      await testConnection();
+      app.listen(PORT, () => {
+        console.log(`\n🚀 Backend API running on http://localhost:${PORT}`);
+        console.log(`   Health: http://localhost:${PORT}/health`);
+        console.log(`   Env:    ${process.env.NODE_ENV || 'development'}\n`);
+      });
+    } catch (err) {
+      console.error('Failed to start server:', err);
+      process.exit(1);
+    }
+  };
 
-start().catch((err) => {
-  console.error('Failed to start server:', err);
-  process.exit(1);
-});
+  start();
+}
 
+// Export for Vercel serverless functions
 module.exports = app;

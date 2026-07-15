@@ -1,29 +1,35 @@
-const mysql = require('mysql2/promise');
+const { createClient } = require('@supabase/supabase-js');
 
-const pool = mysql.createPool({
-  host: process.env.DB_HOST || 'localhost',
-  port: parseInt(process.env.DB_PORT || '3306'),
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'cv',
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-  timezone: '+00:00',
-  charset: 'utf8mb4',
-});
+// Create Supabase client using environment variables
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_KEY;
 
-// Test connection on startup
+if (!supabaseUrl || !supabaseKey) {
+  console.error('❌ Missing Supabase credentials.');
+  console.error('Please set SUPABASE_URL and SUPABASE_KEY in your environment variables.');
+  // Don't exit on startup - let Vercel handle the error
+  if (process.env.NODE_ENV === 'development') {
+    process.exit(1);
+  }
+}
+
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+// Test connection on startup (optional - don't fail if it fails)
 const testConnection = async () => {
   try {
-    const connection = await pool.getConnection();
-    console.log('✅ MySQL connected — database:', process.env.DB_NAME);
-    connection.release();
+    const { error } = await supabase
+      .from('profile')
+      .select('*')
+      .limit(1);
+
+    if (error) throw error;
+
+    console.log('✅ Supabase PostgreSQL connected');
   } catch (err) {
-    console.error('❌ MySQL connection failed:', err.message);
-    console.error('Make sure XAMPP MySQL is running and the "cv" database exists.');
-    process.exit(1);
+    console.error('⚠️  Supabase connection warning:', err.message);
+    // Don't exit - Vercel will handle it, just log the warning
   }
 };
 
-module.exports = { pool, testConnection };
+module.exports = { supabase, testConnection };

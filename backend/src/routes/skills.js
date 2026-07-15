@@ -1,5 +1,5 @@
 const express = require('express');
-const { pool } = require('../config/database');
+const { supabase } = require('../config/database');
 
 const router = express.Router();
 
@@ -8,20 +8,18 @@ router.get('/', async (req, res, next) => {
   try {
     const { category, featured } = req.query;
 
-    let query = 'SELECT * FROM skills WHERE 1=1';
-    const params = [];
+    let query = supabase.from('skills').select('*');
 
     if (category) {
-      query += ' AND category = ?';
-      params.push(category);
+      query = query.eq('category', category);
     }
     if (featured === 'true') {
-      query += ' AND is_featured = 1';
+      query = query.eq('is_featured', true);
     }
 
-    query += ' ORDER BY category, sort_order ASC';
+    const { data: rows, error } = await query.order('category').order('sort_order');
 
-    const [rows] = await pool.query(query, params);
+    if (error) throw error;
 
     // Group by category
     const grouped = rows.reduce((acc, skill) => {

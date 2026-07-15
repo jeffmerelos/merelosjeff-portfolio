@@ -1,5 +1,5 @@
 const express = require('express');
-const { pool } = require('../config/database');
+const { supabase } = require('../config/database');
 
 const router = express.Router();
 
@@ -8,23 +8,21 @@ router.get('/', async (req, res, next) => {
   try {
     const { type } = req.query;
 
-    let query = 'SELECT * FROM experience WHERE 1=1';
-    const params = [];
+    let query = supabase.from('experience').select('*');
 
     if (type && (type === 'work' || type === 'education')) {
-      query += ' AND type = ?';
-      params.push(type);
+      query = query.eq('type', type);
     }
 
-    query += ' ORDER BY start_date DESC';
+    const { data: rows, error } = await query.order('start_date', { ascending: false });
 
-    const [rows] = await pool.query(query, params);
+    if (error) throw error;
 
     // Parse JSON fields
     const experience = rows.map((row) => ({
       ...row,
-      achievements: row.achievements ? JSON.parse(row.achievements) : [],
-      technologies: row.technologies ? JSON.parse(row.technologies) : [],
+      achievements: row.achievements ? JSON.parse(JSON.stringify(row.achievements)) : [],
+      technologies: row.technologies ? JSON.parse(JSON.stringify(row.technologies)) : [],
     }));
 
     res.json({ success: true, data: experience, count: experience.length });

@@ -1,5 +1,5 @@
 const express = require('express');
-const { pool } = require('../config/database');
+const { supabase } = require('../config/database');
 
 const router = express.Router();
 
@@ -8,47 +8,76 @@ router.get('/', async (req, res, next) => {
   try {
     const { category, featured, search } = req.query;
 
-    let query = `
-      SELECT 
-        p.*,
-        GROUP_CONCAT(
-          DISTINCT JSON_OBJECT('id', s.id, 'name', s.name, 'icon_name', s.icon_name, 'color', s.color)
-          ORDER BY s.name
-          SEPARATOR '|||'
-        ) AS technologies_raw
-      FROM projects p
-      LEFT JOIN project_technologies pt ON p.id = pt.project_id
-      LEFT JOIN skills s ON pt.skill_id = s.id
-      WHERE 1=1
-    `;
-    const params = [];
+    // Using Supabase PostgREST API to fetch projects with technologies
+    // We'll fetch projects and then fetch technologies separately, then join in app
+    let query = supabase
+      .from('projects')
+      .select(`
+        id,
+        slug,
+        title,
+        tagline,
+        description,
+        problem,
+        approach,
+        solution,
+        results,
+        learnings,
+        cover_image_url,
+        video_url,
+        live_url,
+        github_url,
+        category,
+        status,
+        role,
+        timeframe,
+        is_featured,
+        is_pinned,
+        sort_order,
+        created_at,
+        updated_at,
+        project_technologies (
+          skill_id,
+          skills (
+            id,
+            name,
+            icon_name,
+            color
+          )
+        )
+      `);
 
     if (category && category !== 'all') {
-      query += ' AND p.category = ?';
-      params.push(category);
+      query = query.eq('category', category);
     }
     if (featured === 'true') {
-      query += ' AND p.is_featured = 1';
+      query = query.eq('is_featured', true);
     }
     if (search) {
-      query += ' AND (p.title LIKE ? OR p.tagline LIKE ? OR p.description LIKE ?)';
       const term = `%${search}%`;
-      params.push(term, term, term);
+      query = query.or(
+        `title.ilike.${term},tagline.ilike.${term},description.ilike.${term}`
+      );
     }
 
-    query += ' GROUP BY p.id ORDER BY p.is_pinned DESC, p.sort_order ASC';
+    const { data: rows, error } = await query
+      .order('is_pinned', { ascending: false })
+      .order('sort_order', { ascending: true });
 
-    const [rows] = await pool.query(query, params);
+    if (error) throw error;
 
-    // Parse technologies from concatenated JSON
+    // Transform the nested data structure
     const projects = rows.map((row) => ({
       ...row,
-      technologies: row.technologies_raw
-        ? row.technologies_raw.split('|||').map((t) => {
-            try { return JSON.parse(t); } catch { return null; }
-          }).filter(Boolean)
-        : [],
-      technologies_raw: undefined,
+      technologies: row.project_technologies
+        .filter((pt) => pt.skills)
+        .map((pt) => ({
+          id: pt.skills.id,
+          name: pt.skills.name,
+          icon_name: pt.skills.icon_name,
+          color: pt.skills.color,
+        })),
+      project_technologies: undefined,
     }));
 
     res.json({ success: true, data: projects, count: projects.length });
@@ -60,51 +89,93 @@ router.get('/', async (req, res, next) => {
 // GET /api/projects/:slug
 router.get('/:slug', async (req, res, next) => {
   try {
-    const [rows] = await pool.query(
-      `SELECT p.*,
-        GROUP_CONCAT(
-          DISTINCT JSON_OBJECT('id', s.id, 'name', s.name, 'icon_name', s.icon_name, 'color', s.color)
-          ORDER BY s.name
-          SEPARATOR '|||'
-        ) AS technologies_raw
-       FROM projects p
-       LEFT JOIN project_technologies pt ON p.id = pt.project_id
-       LEFT JOIN skills s ON pt.skill_id = s.id
-       WHERE p.slug = ?
-       GROUP BY p.id`,
-      [req.params.slug]
-    );
+    const { data: rows, error: projectError } = await supabase
+      .from('projects')
+      .select(`
+        id,
+        slug,
+        title,
+        tagline,
+        description,
+        problem,
+        approach,
+        solution,
+        results,
+        learnings,
+        cover_image_url,
+        video_url,
+        live_url,
+        github_url,
+        category,
+        status,
+        role,
+        timeframe,
+        is_featured,
+        is_pinned,
+        sort_order,
+        created_at,
+        updated_at,
+        project_technologies (
+          skill_id,
+          skills (
+            id,
+            name,
+            icon_name,
+            color
+          )
+        )
+      `)
+      .eq('slug', req.params.slug)
+      .single();
 
-    if (!rows.length) {
-      return res.status(404).json({ success: false, error: 'Project not found' });
+    if (projectError) {
+      if (projectError.code === 'PGRST116') {
+        return res.status(404).json({ success: false, error: 'Project not found' });
+      }
+      throw projectError;
     }
 
-    const project = rows[0];
-    project.technologies = project.technologies_raw
-      ? project.technologies_raw.split('|||').map((t) => {
-          try { return JSON.parse(t); } catch { return null; }
-        }).filter(Boolean)
-      : [];
-    delete project.technologies_raw;
+    const project = rows;
+    project.technologies = project.project_technologies
+      .filter((pt) => pt.skills)
+      .map((pt) => ({
+        id: pt.skills.id,
+        name: pt.skills.name,
+        icon_name: pt.skills.icon_name,
+        color: pt.skills.color,
+      }));
+    delete project.project_technologies;
 
     // Get images
-    const [images] = await pool.query(
-      'SELECT * FROM project_images WHERE project_id = ? ORDER BY sort_order',
-      [project.id]
-    );
-    project.images = images;
+    const { data: images, error: imagesError } = await supabase
+      .from('project_images')
+      .select('*')
+      .eq('project_id', project.id)
+      .order('sort_order', { ascending: true });
 
-    // Get prev/next
-    const [prev] = await pool.query(
-      'SELECT slug, title FROM projects WHERE sort_order < ? ORDER BY sort_order DESC LIMIT 1',
-      [project.sort_order]
-    );
-    const [next] = await pool.query(
-      'SELECT slug, title FROM projects WHERE sort_order > ? ORDER BY sort_order ASC LIMIT 1',
-      [project.sort_order]
-    );
-    project.prev = prev[0] || null;
-    project.next = next[0] || null;
+    if (!imagesError) {
+      project.images = images;
+    }
+
+    // Get prev project
+    const { data: prevData } = await supabase
+      .from('projects')
+      .select('slug, title')
+      .lt('sort_order', project.sort_order)
+      .order('sort_order', { ascending: false })
+      .limit(1)
+      .single();
+    project.prev = prevData || null;
+
+    // Get next project
+    const { data: nextData } = await supabase
+      .from('projects')
+      .select('slug, title')
+      .gt('sort_order', project.sort_order)
+      .order('sort_order', { ascending: true })
+      .limit(1)
+      .single();
+    project.next = nextData || null;
 
     res.json({ success: true, data: project });
   } catch (err) {

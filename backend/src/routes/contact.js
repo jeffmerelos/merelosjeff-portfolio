@@ -1,7 +1,7 @@
 const express = require('express');
 const { body } = require('express-validator');
 const rateLimit = require('express-rate-limit');
-const { pool } = require('../config/database');
+const { supabase } = require('../config/database');
 const { sendContactEmail, sendAutoReply } = require('../config/mailer');
 const { validate } = require('../middleware/validate');
 
@@ -53,10 +53,22 @@ router.post('/', contactLimiter, contactValidation, validate, async (req, res, n
     const ip = req.ip || req.connection.remoteAddress;
 
     // Save to database
-    await pool.query(
-      'INSERT INTO contact_messages (name, email, subject, message, ip_address) VALUES (?, ?, ?, ?, ?)',
-      [name, email, subject || null, message, ip]
-    );
+    const { error: insertError } = await supabase
+      .from('contact_messages')
+      .insert([
+        {
+          name,
+          email,
+          subject: subject || null,
+          message,
+          ip_address: ip,
+          status: 'unread',
+        },
+      ]);
+
+    if (insertError) {
+      throw insertError;
+    }
 
     // Send emails (non-blocking — don't fail the response if email fails)
     try {
