@@ -1,12 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import type { Metadata } from 'next';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { getProfile, getSkills } from '@/lib/api';
 import { motion } from 'framer-motion';
-import { Download, Mail, MapPin, Clock, Award, Users, Code } from 'lucide-react';
+import { Download, Mail, MapPin, Clock, Code } from 'lucide-react';
 
 interface Profile {
   id: number;
