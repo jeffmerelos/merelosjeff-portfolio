@@ -12,11 +12,16 @@ import { Mail, MapPin, Clock, Github, Linkedin, Twitter, Copy, Check, Send } fro
 import { motion } from 'framer-motion';
 
 const schema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters').max(150),
-  email: z.string().email('Please enter a valid email address'),
-  subject: z.string().max(255).optional(),
-  message: z.string().min(20, 'Message must be at least 20 characters').max(5000),
-  website: z.string().max(0).optional(), // honeypot
+  name: z.string().min(2, 'Name must be at least 2 characters').max(150, 'Name must be 150 characters or fewer'),
+  email: z.string()
+    .email('Please enter a valid email address')
+    .min(5, 'Email is too short')
+    .max(150, 'Email is too long'),
+  subject: z.string().max(255, 'Subject must be 255 characters or fewer').optional().or(z.literal('')),
+  message: z.string()
+    .min(20, 'Message must be at least 20 characters')
+    .max(5000, 'Message must be 5000 characters or fewer'),
+  website: z.string().max(0, 'Bot detected').optional(), // honeypot
 });
 
 type FormData = z.infer<typeof schema>;
@@ -36,18 +41,24 @@ export default function ContactPage() {
     if (data.website) return; // honeypot
     setSending(true);
     try {
-      await sendContactMessage(data);
-      toast.success("Message sent! I'll be in touch within 48 hours.");
-      reset();
-    } catch {
-      toast.error('Failed to send message. Please try emailing directly.');
+      const response = await sendContactMessage(data);
+      if (response.success) {
+        toast.success(response.message || "Message sent! I'll be in touch within 48 hours.");
+        reset();
+      } else {
+        toast.error(response.error || 'Failed to send message. Please try emailing directly.');
+      }
+    } catch (error: any) {
+      console.error('Contact form error:', error);
+      const errorMessage = error.response?.data?.error || error.message || 'Failed to send message. Please try emailing directly.';
+      toast.error(errorMessage);
     } finally {
       setSending(false);
     }
   };
 
   const copyEmail = async () => {
-    await navigator.clipboard.writeText('merelosjeft@gmail.com');
+    await navigator.clipboard.writeText('merelosjeff@gmail.com');
     setCopied(true);
     toast.success('Email copied to clipboard!');
     setTimeout(() => setCopied(false), 2000);
@@ -101,20 +112,23 @@ export default function ContactPage() {
 
                     <div>
                       <label htmlFor="email" className="block font-mono text-xs text-text-muted uppercase tracking-wider mb-2">
-                        Email *
+                        Email * {errors.email && <span className="text-neon-pink">({errors.email.message})</span>}
                       </label>
                       <input
                         id="email"
                         type="email"
                         {...register('email')}
-                        className="input"
-                        placeholder="merelosjeft@gmail.com"
+                        className={`input ${errors.email ? 'border-neon-pink/50' : ''}`}
+                        placeholder="your.email@example.com"
                         autoComplete="email"
                         aria-invalid={!!errors.email}
                         aria-describedby={errors.email ? 'email-error' : undefined}
                       />
                       {errors.email && (
-                        <p id="email-error" className="mt-1 text-xs text-neon-pink" role="alert">{errors.email.message}</p>
+                        <p id="email-error" className="mt-1 text-xs text-neon-pink" role="alert">✗ {errors.email.message}</p>
+                      )}
+                      {!errors.email && (
+                        <p className="mt-1 text-xs text-green-400">✓ Valid email format</p>
                       )}
                     </div>
                   </div>
@@ -179,8 +193,8 @@ export default function ContactPage() {
                 <div className="card">
                   <p className="font-mono text-xs text-text-muted uppercase tracking-wider mb-2">Email</p>
                   <div className="flex items-center justify-between gap-2">
-                    <a href="mailto:merelosjeft@gmail.com" className="link text-sm font-medium flex items-center gap-2">
-                      <Mail size={15} /> merelosjeft@gmail.com
+                    <a href="mailto:merelosjeff@gmail.com" className="link text-sm font-medium flex items-center gap-2">
+                      <Mail size={15} /> merelosjeff@gmail.com
                     </a>
                     <button onClick={copyEmail} aria-label="Copy email address" className="text-text-muted hover:text-neon-pink transition-colors">
                       {copied ? <Check size={15} className="text-neon-blue" /> : <Copy size={15} />}

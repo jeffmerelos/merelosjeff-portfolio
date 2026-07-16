@@ -53,7 +53,7 @@ router.post('/', contactLimiter, contactValidation, validate, async (req, res, n
     const ip = req.ip || req.connection.remoteAddress;
 
     // Save to database
-    const { error: insertError } = await supabase
+    const { data: insertedData, error: insertError } = await supabase
       .from('contact_messages')
       .insert([
         {
@@ -64,25 +64,35 @@ router.post('/', contactLimiter, contactValidation, validate, async (req, res, n
           ip_address: ip,
           status: 'unread',
         },
-      ]);
+      ])
+      .select();
 
     if (insertError) {
-      throw insertError;
+      console.error('Database insert error:', insertError);
+      return res.status(400).json({
+        success: false,
+        error: 'Failed to save message to database',
+        details: insertError.message,
+      });
     }
 
     // Send emails (non-blocking — don't fail the response if email fails)
+    // Email is optional, database save is the priority
     try {
       await sendContactEmail({ name, email, subject, message });
       await sendAutoReply({ name, email });
     } catch (emailErr) {
       console.error('Email send failed (message saved to DB):', emailErr.message);
+      // Don't fail the response - message is already saved to DB
     }
 
     res.status(201).json({
       success: true,
       message: 'Message received! I\'ll get back to you within 24–48 hours.',
+      data: insertedData,
     });
   } catch (err) {
+    console.error('Contact route error:', err);
     next(err);
   }
 });
