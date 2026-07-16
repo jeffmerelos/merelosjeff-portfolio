@@ -52,6 +52,8 @@ router.post('/', contactLimiter, contactValidation, validate, async (req, res, n
     const { name, email, subject, message } = req.body;
     const ip = req.ip || req.connection.remoteAddress;
 
+    console.log('📧 Processing contact form submission:', { name, email, subject });
+
     // Save to database
     const { data: insertedData, error: insertError } = await supabase
       .from('contact_messages')
@@ -68,7 +70,7 @@ router.post('/', contactLimiter, contactValidation, validate, async (req, res, n
       .select();
 
     if (insertError) {
-      console.error('Database insert error:', insertError);
+      console.error('❌ Database insert error:', insertError);
       return res.status(400).json({
         success: false,
         error: 'Failed to save message to database',
@@ -76,13 +78,20 @@ router.post('/', contactLimiter, contactValidation, validate, async (req, res, n
       });
     }
 
+    console.log('✅ Message saved to database:', insertedData);
+
     // Send emails (non-blocking — don't fail the response if email fails)
     // Email is optional, database save is the priority
     try {
+      console.log('📨 Sending contact email notification...');
       await sendContactEmail({ name, email, subject, message });
+      console.log('✅ Contact email sent successfully');
+      
+      console.log('📨 Sending auto-reply to user...');
       await sendAutoReply({ name, email });
+      console.log('✅ Auto-reply sent successfully');
     } catch (emailErr) {
-      console.error('Email send failed (message saved to DB):', emailErr.message);
+      console.error('⚠️  Email send failed (message saved to DB):', emailErr.message);
       // Don't fail the response - message is already saved to DB
     }
 
@@ -92,7 +101,7 @@ router.post('/', contactLimiter, contactValidation, validate, async (req, res, n
       data: insertedData,
     });
   } catch (err) {
-    console.error('Contact route error:', err);
+    console.error('❌ Contact route error:', err);
     next(err);
   }
 });

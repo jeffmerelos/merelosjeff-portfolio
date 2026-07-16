@@ -41,15 +41,23 @@ export default function ContactPage() {
     if (data.website) return; // honeypot
     setSending(true);
     try {
+      console.log('📧 Sending contact form:', { name: data.name, email: data.email, subject: data.subject });
       const response = await sendContactMessage(data);
+      console.log('✅ Contact response:', response);
+      
       if (response.success) {
         toast.success(response.message || "Message sent! I'll be in touch within 48 hours.");
         reset();
       } else {
+        console.error('❌ API returned error:', response.error);
         toast.error(response.error || 'Failed to send message. Please try emailing directly.');
       }
     } catch (error: any) {
-      console.error('Contact form error:', error);
+      console.error('❌ Contact form error:', error);
+      console.error('   Status:', error.response?.status);
+      console.error('   Data:', error.response?.data);
+      console.error('   Message:', error.message);
+      
       const errorMessage = error.response?.data?.error || error.message || 'Failed to send message. Please try emailing directly.';
       toast.error(errorMessage);
     } finally {
@@ -112,7 +120,7 @@ export default function ContactPage() {
 
                     <div>
                       <label htmlFor="email" className="block font-mono text-xs text-text-muted uppercase tracking-wider mb-2">
-                        Email * {errors.email && <span className="text-neon-pink">({errors.email.message})</span>}
+                        Email *
                       </label>
                       <input
                         id="email"
@@ -122,13 +130,13 @@ export default function ContactPage() {
                         placeholder="your.email@example.com"
                         autoComplete="email"
                         aria-invalid={!!errors.email}
-                        aria-describedby={errors.email ? 'email-error' : undefined}
+                        aria-describedby={errors.email ? 'email-error' : 'email-valid'}
                       />
                       {errors.email && (
                         <p id="email-error" className="mt-1 text-xs text-neon-pink" role="alert">✗ {errors.email.message}</p>
                       )}
                       {!errors.email && (
-                        <p className="mt-1 text-xs text-green-400">✓ Valid email format</p>
+                        <p id="email-valid" className="mt-1 text-xs text-green-400">✓ Valid email format</p>
                       )}
                     </div>
                   </div>
