@@ -207,11 +207,29 @@ export default function AboutPage() {
                   <div className="card mb-6">
                     <h3 className="eyebrow mb-4">My Story</h3>
                     <div className="prose prose-invert max-w-none">
-                      {profile.bio_long.split('\n\n').map((paragraph, i) => (
-                        <p key={i} className="text-text-muted leading-relaxed mb-4 last:mb-0">
-                          {paragraph}
-                        </p>
-                      ))}
+                      <p className="text-text-muted leading-relaxed mb-4">
+                        Hello! I'm Jefferson Bacaro Merelos, a passionate Software Developer and a graduate of Cebu Technological University – Naga Extension Campus, where I earned my Bachelor of Science in Information Technology, Major in Programming.
+                      </p>
+                      
+                      <p className="text-text-muted leading-relaxed mb-4">
+                        I am passionate about building modern web applications that solve real-world problems and create meaningful experiences for users. I enjoy turning ideas into practical digital solutions by developing secure, efficient, and user-friendly applications that address real needs. Every project I work on is an opportunity to learn, improve, and create software that makes a positive impact.
+                      </p>
+                      
+                      <p className="text-text-muted leading-relaxed mb-4">
+                        My technical experience includes working with Next.js, Node.js, React, JavaScript, PHP, MySQL, Supabase, REST APIs, Git, and GitHub, allowing me to build responsive and scalable applications while continuously expanding my knowledge of modern web technologies. I am always eager to learn new tools, embrace new challenges, and grow as a software developer.
+                      </p>
+                      
+                      <p className="text-text-muted leading-relaxed mb-4">
+                        One of the projects I am most proud of is a Web-Based Time In and Out System with Face Recognition and SMS Verification, developed to enhance student safety and attendance monitoring. The system combines RFID authentication, facial recognition, and real-time SMS notifications to provide a secure and efficient solution for educational institutions.
+                      </p>
+                      
+                      <p className="text-text-muted leading-relaxed mb-4">
+                        I believe technology has the power to improve lives and solve real-world challenges. My goal is to continue developing innovative web applications, collaborate with talented teams, and contribute to projects that make a meaningful difference. I am committed to continuous learning, writing clean and maintainable code, and delivering high-quality software solutions.
+                      </p>
+                      
+                      <p className="text-text-muted leading-relaxed">
+                        To learn more about my education, technical skills, projects, and experience, please feel free to explore my Curriculum Vitae (CV).
+                      </p>
                     </div>
                   </div>
 

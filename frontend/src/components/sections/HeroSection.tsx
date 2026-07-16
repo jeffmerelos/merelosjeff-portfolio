@@ -119,10 +119,11 @@ export default function HeroSection() {
 
               {/* Avatar */}
               <div className="absolute inset-2 rounded-full bg-bg-panel border border-neon-pink/50 overflow-hidden shadow-neon-pink-lg flex items-center justify-center">
-                {/* Replace with actual <Image /> of your avatar */}
-                <span className="font-display text-7xl font-bold text-gradient select-none" aria-label="JD initials">
-                  JD
-                </span>
+                <img 
+                  src="/images/profile2.png" 
+                  alt="Jefferson Bacaro Merelos" 
+                  className="w-full h-full object-cover"
+                />
               </div>
 
               {/* Floating tech badges */}
