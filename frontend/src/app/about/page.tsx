@@ -1,34 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import { getProfile, getSkills } from '@/lib/api';
+import { getSkills } from '@/lib/api';
 import { motion } from 'framer-motion';
-import { Download, Mail, MapPin, Clock, Code } from 'lucide-react';
-
-interface Profile {
-  id: number;
-  full_name: string;
-  title: string;
-  tagline: string;
-  bio_short: string;
-  bio_long: string;
-  email: string;
-  phone: string;
-  location: string;
-  timezone: string;
-  availability_status: 'available' | 'busy' | 'not_available';
-  avatar_url: string;
-  resume_url: string;
-  github_username: string;
-  linkedin_url: string;
-  twitter_url: string;
-  website_url: string;
-  years_experience: number;
-  projects_shipped: number;
-  happy_clients: number;
-}
+import { Download, Mail, MapPin, Code } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 interface Skill {
   id: number;
@@ -41,59 +18,34 @@ interface Skill {
 }
 
 export default function AboutPage() {
-  const [profile, setProfile] = useState<Profile | null>(null);
   const [skills, setSkills] = useState<Skill[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    Promise.all([getProfile(), getSkills()])
-      .then(([profileData, skillsData]) => {
-        setProfile(profileData);
+    getSkills()
+      .then((skillsData) => {
         setSkills(skillsData.skills || []);
       })
-      .catch(console.error)
+      .catch((error) => {
+        console.error('Error loading skills:', error);
+        setSkills([]);
+      })
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) {
-    return (
-      <div id="top">
-        <Navbar />
-        <main className="pt-24">
-          <section className="section">
-            <div className="container">
-              <div className="animate-pulse space-y-8">
-                <div className="h-8 bg-bg-panel rounded w-1/3"></div>
-                <div className="h-64 bg-bg-panel rounded"></div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {Array.from({ length: 6 }).map((_, i) => (
-                    <div key={i} className="h-32 bg-bg-panel rounded"></div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </section>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
-
-  if (!profile) {
-    return (
-      <div id="top">
-        <Navbar />
-        <main className="pt-24">
-          <section className="section">
-            <div className="container text-center">
-              <p className="font-mono text-text-muted">// Profile data not found</p>
-            </div>
-          </section>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
+  // Hardcoded profile data
+  const profile = {
+    full_name: 'Jefferson Bacaro Merelos',
+    title: 'Software Developer',
+    location: 'Naga City, Cebu, Philippines',
+    timezone: 'UTC+8 (Philippine Time)',
+    email: 'merelosjeff@gmail.com',
+    availability_status: 'available' as const,
+    resume_url: '/files/Jeff-CV.pdf',
+    years_experience: 2,
+    projects_shipped: 15,
+    happy_clients: 8,
+  };
 
   const availabilityColors = {
     available: 'text-green-400',
@@ -135,12 +87,12 @@ export default function AboutPage() {
                   className="lg:col-span-1"
                 >
                   <div className="card text-center mb-6">
-                    <div className="w-32 h-32 mx-auto mb-4 rounded-full bg-gradient-to-br from-neon-pink to-neon-violet flex items-center justify-center text-2xl font-display font-bold">
-                      {profile.avatar_url ? (
-                        <img src={profile.avatar_url} alt={profile.full_name} className="w-full h-full object-cover rounded-full" />
-                      ) : (
-                        profile.full_name.split(' ').map(n => n[0]).join('')
-                      )}
+                    <div className="w-32 h-32 mx-auto mb-4 rounded-full bg-gradient-to-br from-neon-pink to-neon-violet flex items-center justify-center text-2xl font-display font-bold overflow-hidden">
+                      <img 
+                        src="/images/profile2.png" 
+                        alt={profile.full_name} 
+                        className="w-full h-full object-cover"
+                      />
                     </div>
                     <h2 className="font-display font-bold text-lg mb-1">{profile.full_name}</h2>
                     <p className="text-neon-violet text-sm mb-3">{profile.title}</p>
@@ -155,12 +107,6 @@ export default function AboutPage() {
                         <div className="flex items-center gap-2">
                           <MapPin size={14} />
                           <span>{profile.location}</span>
-                        </div>
-                      )}
-                      {profile.timezone && (
-                        <div className="flex items-center gap-2">
-                          <Clock size={14} />
-                          <span>{profile.timezone}</span>
                         </div>
                       )}
                       <div className="flex items-center gap-2">
@@ -233,7 +179,7 @@ export default function AboutPage() {
                   </div>
 
                   {/* Featured Skills */}
-                  {featuredSkills.length > 0 && (
+                  {!loading && featuredSkills.length > 0 && (
                     <div className="card">
                       <h3 className="eyebrow mb-4">Core Technologies</h3>
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
@@ -274,7 +220,7 @@ export default function AboutPage() {
                 Let's Build Something <span className="text-gradient">Amazing</span>
               </h2>
               <p className="text-text-muted leading-relaxed mb-8">
-                {profile.tagline || "I'm always excited to work on new projects and solve interesting problems."}
+                I'm always excited to work on new projects and solve interesting problems.
               </p>
               <div className="flex flex-wrap gap-4 justify-center">
                 <a href="/contact" className="btn-primary">
