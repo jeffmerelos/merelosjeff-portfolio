@@ -3,251 +3,355 @@
 import { useState } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { sendContactMessage } from '@/lib/api';
-import toast from 'react-hot-toast';
-import { Mail, MapPin, Clock, Github, Linkedin, Twitter, Copy, Check, Send } from 'lucide-react';
-import { motion } from 'framer-motion';
+import Link from 'next/link';
 
-const schema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters').max(150, 'Name must be 150 characters or fewer'),
-  email: z.string()
-    .email('Please enter a valid email address')
-    .min(5, 'Email is too short')
-    .max(150, 'Email is too long'),
-  subject: z.string().max(255, 'Subject must be 255 characters or fewer').optional().or(z.literal('')),
-  message: z.string()
-    .min(20, 'Message must be at least 20 characters')
-    .max(5000, 'Message must be 5000 characters or fewer'),
-  website: z.string().max(0, 'Bot detected').optional(), // honeypot
-});
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-type FormData = z.infer<typeof schema>;
+interface FormData {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+}
+
+interface ValidationErrors {
+  name?: string;
+  email?: string;
+  subject?: string;
+  message?: string;
+}
 
 export default function ContactPage() {
-  const [copied, setCopied] = useState(false);
-  const [sending, setSending] = useState(false);
+  const [formData, setFormData] = useState<FormData>({
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
+  });
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<FormData>({ resolver: zodResolver(schema) });
+  const [errors, setErrors] = useState<ValidationErrors>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<{
+    type: 'success' | 'error' | null;
+    message: string;
+  }>({ type: null, message: '' });
 
-  const onSubmit = async (data: FormData) => {
-    if (data.website) return; // honeypot
-    setSending(true);
-    try {
-      console.log('📧 Sending contact form:', { name: data.name, email: data.email, subject: data.subject });
-      const response = await sendContactMessage(data);
-      console.log('✅ Contact response:', response);
-      
-      if (response.success) {
-        toast.success(response.message || "Message sent! I'll be in touch within 48 hours.");
-        reset();
+  // Validate email format
+  const validateEmail = (email: string): boolean => {
+    return EMAIL_REGEX.test(email);
+  };
+
+  // Validate form
+  const validateForm = (): boolean => {
+    const newErrors: ValidationErrors = {};
+
+    if (!formData.name.trim()) {
+      newErrors.name = 'Name is required';
+    } else if (formData.name.trim().length > 150) {
+      newErrors.name = 'Name must be 150 characters or fewer';
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!validateEmail(formData.email)) {
+      newErrors.email = 'Please enter a valid email address (e.g., name@example.com)';
+    }
+
+    if (formData.subject.trim().length > 255) {
+      newErrors.subject = 'Subject must be 255 characters or fewer';
+    }
+
+    if (!formData.message.trim()) {
+      newErrors.message = 'Message is required';
+    } else if (formData.message.trim().length < 20) {
+      newErrors.message = 'Message must be at least 20 characters';
+    } else if (formData.message.trim().length > 5000) {
+      newErrors.message = 'Message must be 5000 characters or fewer';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  // Handle input changes
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    // Clear error for this field when user starts typing
+    if (errors[name as keyof ValidationErrors]) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: undefined,
+      }));
+    }
+
+    // Real-time email validation
+    if (name === 'email' && value) {
+      if (!validateEmail(value)) {
+        setErrors((prev) => ({
+          ...prev,
+          email: 'Please enter a valid email address',
+        }));
       } else {
-        console.error('❌ API returned error:', response.error);
-        toast.error(response.error || 'Failed to send message. Please try emailing directly.');
+        setErrors((prev) => ({
+          ...prev,
+          email: undefined,
+        }));
       }
-    } catch (error: any) {
-      console.error('❌ Contact form error:', error);
-      console.error('   Status:', error.response?.status);
-      console.error('   Data:', error.response?.data);
-      console.error('   Message:', error.message);
-      
-      const errorMessage = error.response?.data?.error || error.message || 'Failed to send message. Please try emailing directly.';
-      toast.error(errorMessage);
-    } finally {
-      setSending(false);
     }
   };
 
-  const copyEmail = async () => {
-    await navigator.clipboard.writeText('merelosjeff@gmail.com');
-    setCopied(true);
-    toast.success('Email copied to clipboard!');
-    setTimeout(() => setCopied(false), 2000);
+  // Handle form submission
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    // Validate before submitting
+    if (!validateForm()) {
+      setSubmitStatus({
+        type: 'error',
+        message: 'Please fix the errors above',
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    setSubmitStatus({ type: null, message: '' });
+
+    try {
+      console.log('📧 Sending contact form:', formData);
+      const response = await sendContactMessage({
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        subject: formData.subject.trim() || undefined,
+        message: formData.message.trim(),
+      });
+
+      console.log('✅ Contact form sent successfully:', response);
+
+      setSubmitStatus({
+        type: 'success',
+        message:
+          'Message sent successfully! I\'ll get back to you within 24–48 hours.',
+      });
+
+      // Reset form
+      setFormData({
+        name: '',
+        email: '',
+        subject: '',
+        message: '',
+      });
+    } catch (error) {
+      console.error('❌ Contact form error:', error);
+
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Failed to send message. Please try again or email me directly.';
+
+      setSubmitStatus({
+        type: 'error',
+        message: errorMessage,
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <div id="top">
+    <div>
       <Navbar />
-      <main className="pt-24">
-        <section className="section">
-          <div className="container">
-            <p className="eyebrow mb-4">// let&apos;s talk</p>
-            <h1 className="heading-1 mb-4">
-              Let&apos;s Build Something <span className="text-gradient">Together</span>
+      <main>
+        {/* Hero Section */}
+        <section className="section border-t border-line bg-gradient-to-br from-neon-pink/5 via-transparent to-neon-violet/5">
+          <div className="container text-center">
+            <p className="eyebrow mb-4">// get in touch</p>
+            <h1 className="heading-1 mb-6">
+              Let's <span className="text-gradient">Connect</span>
             </h1>
-            <p className="text-text-muted max-w-2xl leading-relaxed mb-12">
-              Have a project in mind? Want to collaborate? Or just want to say hello?
-              I&apos;m always up for a conversation.
+            <p className="text-text-muted max-w-2xl mx-auto leading-relaxed">
+              Have a question or project in mind? I'd love to hear from you.
+              Fill out the form below and I'll get back to you as soon as possible.
             </p>
+          </div>
+        </section>
 
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
-              {/* Form */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="lg:col-span-3"
-              >
-                <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
-                  {/* Honeypot — hidden from humans */}
-                  <input type="text" {...register('website')} className="hidden" tabIndex={-1} aria-hidden="true" />
+        {/* Contact Form Section */}
+        <section className="section">
+          <div className="container max-w-2xl">
+            <div className="card">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Name Field */}
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium mb-2">
+                    Name <span className="text-neon-pink">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="Your name"
+                    className={`w-full px-4 py-2 rounded-lg bg-bg-input border ${
+                      errors.name
+                        ? 'border-neon-pink focus:border-neon-pink'
+                        : 'border-line focus:border-neon-pink'
+                    } text-text-primary placeholder-text-muted transition-colors outline-none`}
+                    disabled={isSubmitting}
+                  />
+                  {errors.name && (
+                    <p className="text-neon-pink text-sm mt-1">{errors.name}</p>
+                  )}
+                </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <div>
-                      <label htmlFor="name" className="block font-mono text-xs text-text-muted uppercase tracking-wider mb-2">
-                        Name *
-                      </label>
-                      <input
-                        id="name"
-                        type="text"
-                        {...register('name')}
-                        className="input"
-                        placeholder="Jefferson "
-                        autoComplete="name"
-                        aria-invalid={!!errors.name}
-                        aria-describedby={errors.name ? 'name-error' : undefined}
-                      />
-                      {errors.name && (
-                        <p id="name-error" className="mt-1 text-xs text-neon-pink" role="alert">{errors.name.message}</p>
-                      )}
-                    </div>
+                {/* Email Field */}
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium mb-2">
+                    Email <span className="text-neon-pink">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="your.email@example.com"
+                    className={`w-full px-4 py-2 rounded-lg bg-bg-input border ${
+                      errors.email
+                        ? 'border-neon-pink focus:border-neon-pink'
+                        : 'border-line focus:border-neon-pink'
+                    } text-text-primary placeholder-text-muted transition-colors outline-none`}
+                    disabled={isSubmitting}
+                  />
+                  {errors.email && (
+                    <p className="text-neon-pink text-sm mt-1">{errors.email}</p>
+                  )}
+                </div>
 
-                    <div>
-                      <label htmlFor="email" className="block font-mono text-xs text-text-muted uppercase tracking-wider mb-2">
-                        Email *
-                      </label>
-                      <input
-                        id="email"
-                        type="email"
-                        {...register('email')}
-                        className={`input ${errors.email ? 'border-neon-pink/50' : ''}`}
-                        placeholder="your.email@example.com"
-                        autoComplete="email"
-                        aria-invalid={!!errors.email}
-                        aria-describedby={errors.email ? 'email-error' : 'email-valid'}
-                      />
-                      {errors.email && (
-                        <p id="email-error" className="mt-1 text-xs text-neon-pink" role="alert">✗ {errors.email.message}</p>
-                      )}
-                      {!errors.email && (
-                        <p id="email-valid" className="mt-1 text-xs text-green-400">✓ Valid email format</p>
-                      )}
-                    </div>
-                  </div>
+                {/* Subject Field */}
+                <div>
+                  <label htmlFor="subject" className="block text-sm font-medium mb-2">
+                    Subject
+                  </label>
+                  <input
+                    type="text"
+                    id="subject"
+                    name="subject"
+                    value={formData.subject}
+                    onChange={handleChange}
+                    placeholder="What is this about?"
+                    className={`w-full px-4 py-2 rounded-lg bg-bg-input border ${
+                      errors.subject
+                        ? 'border-neon-pink focus:border-neon-pink'
+                        : 'border-line focus:border-neon-pink'
+                    } text-text-primary placeholder-text-muted transition-colors outline-none`}
+                    disabled={isSubmitting}
+                  />
+                  {errors.subject && (
+                    <p className="text-neon-pink text-sm mt-1">{errors.subject}</p>
+                  )}
+                </div>
 
-                  <div>
-                    <label htmlFor="subject" className="block font-mono text-xs text-text-muted uppercase tracking-wider mb-2">
-                      Subject
-                    </label>
-                    <input
-                      id="subject"
-                      type="text"
-                      {...register('subject')}
-                      className="input"
-                      placeholder="Project inquiry, collaboration..."
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="message" className="block font-mono text-xs text-text-muted uppercase tracking-wider mb-2">
-                      Message *
-                    </label>
-                    <textarea
-                      id="message"
-                      {...register('message')}
-                      rows={6}
-                      className="textarea"
-                      placeholder="Tell me about your project, timeline, and budget..."
-                      aria-invalid={!!errors.message}
-                      aria-describedby={errors.message ? 'message-error' : undefined}
-                    />
+                {/* Message Field */}
+                <div>
+                  <label htmlFor="message" className="block text-sm font-medium mb-2">
+                    Message <span className="text-neon-pink">*</span>
+                  </label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    placeholder="Tell me about your project or question..."
+                    rows={6}
+                    className={`w-full px-4 py-2 rounded-lg bg-bg-input border ${
+                      errors.message
+                        ? 'border-neon-pink focus:border-neon-pink'
+                        : 'border-line focus:border-neon-pink'
+                    } text-text-primary placeholder-text-muted transition-colors outline-none resize-none`}
+                    disabled={isSubmitting}
+                  />
+                  <div className="flex justify-between items-center mt-2">
                     {errors.message && (
-                      <p id="message-error" className="mt-1 text-xs text-neon-pink" role="alert">{errors.message.message}</p>
+                      <p className="text-neon-pink text-sm">{errors.message}</p>
                     )}
+                    <p className="text-text-muted text-sm ml-auto">
+                      {formData.message.length}/5000
+                    </p>
                   </div>
+                </div>
 
-                  <button
-                    type="submit"
-                    disabled={sending}
-                    className="btn-primary w-full sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {sending ? (
-                      <>
-                        <span className="animate-spin">⟳</span> Sending...
-                      </>
-                    ) : (
-                      <>
-                        <Send size={18} /> Send Message
-                      </>
-                    )}
-                  </button>
-                </form>
-              </motion.div>
+                {/* Status Messages */}
+                {submitStatus.type === 'success' && (
+                  <div className="p-4 rounded-lg bg-neon-pink/10 border border-neon-pink text-neon-pink">
+                    ✅ {submitStatus.message}
+                  </div>
+                )}
 
-              {/* Direct info */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.15 }}
-                className="lg:col-span-2 space-y-6"
-              >
-                {/* Email */}
-                <div className="card">
-                  <p className="font-mono text-xs text-text-muted uppercase tracking-wider mb-2">Email</p>
-                  <div className="flex items-center justify-between gap-2">
-                    <a href="mailto:merelosjeff@gmail.com" className="link text-sm font-medium flex items-center gap-2">
-                      <Mail size={15} /> merelosjeff@gmail.com
+                {submitStatus.type === 'error' && (
+                  <div className="p-4 rounded-lg bg-neon-pink/10 border border-neon-pink text-neon-pink">
+                    ❌ {submitStatus.message}
+                  </div>
+                )}
+
+                {/* Submit Button */}
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isSubmitting ? 'Sending...' : 'Send Message'}
+                </button>
+
+                <p className="text-text-muted text-center text-sm">
+                  <span className="text-neon-pink">*</span> Required fields
+                </p>
+              </form>
+
+              {/* Alternative Contact Methods */}
+              <div className="mt-8 pt-8 border-t border-line">
+                <p className="text-text-muted text-center mb-4">
+                  Prefer another way to reach me?
+                </p>
+                <div className="space-y-2 text-center">
+                  <p>
+                    <span className="text-text-muted">Email: </span>
+                    <a
+                      href="mailto:jeffmerelos@gmail.com"
+                      className="text-neon-pink hover:underline"
+                    >
+                      jeffmerelos@gmail.com
                     </a>
-                    <button onClick={copyEmail} aria-label="Copy email address" className="text-text-muted hover:text-neon-pink transition-colors">
-                      {copied ? <Check size={15} className="text-neon-blue" /> : <Copy size={15} />}
-                    </button>
-                  </div>
-                </div>
-
-                {/* Location */}
-                <div className="card">
-                  <p className="font-mono text-xs text-text-muted uppercase tracking-wider mb-2">Location</p>
-                  <p className="text-sm flex items-center gap-2 text-text-primary">
-                    <MapPin size={15} className="text-neon-violet" /> Gaway-gaway 1, Uling City of Naga Cebu, Philippines.
                   </p>
-                  <p className="text-sm flex items-center gap-2 text-text-muted mt-1">
-                    <Clock size={15} /> UTC+0 Timezone
+                  <p className="text-text-muted text-sm">
+                    I typically respond within 24-48 hours
                   </p>
                 </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
-                {/* Availability */}
-                <div className="card border-neon-blue/30">
-                  <p className="font-mono text-xs text-text-muted uppercase tracking-wider mb-2">Availability</p>
-                  <div className="flex items-center gap-2">
-                    <span className="status-dot" aria-hidden="true" />
-                    <span className="text-sm text-neon-blue font-medium">Open to new projects</span>
-                  </div>
-                  <p className="text-xs text-text-muted mt-2">Usually responds within 8-12 hours.</p>
-                </div>
-
-                {/* Social links */}
-                <div className="card">
-                  <p className="font-mono text-xs text-text-muted uppercase tracking-wider mb-3">Find me online</p>
-                  <div className="flex gap-3">
-                    {[
-                      { href: 'https://github.com/jeffdev', label: 'GitHub', Icon: Github },
-                      { href: 'https://linkedin.com/in/jeffdev', label: 'LinkedIn', Icon: Linkedin },
-                      { href: 'https://twitter.com/jeffdev', label: 'Twitter/X', Icon: Twitter },
-                    ].map(({ href, label, Icon }) => (
-                      <a key={label} href={href} target="_blank" rel="noopener noreferrer"
-                        aria-label={label} className="btn-icon w-10 h-10">
-                        <Icon size={17} />
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
+        {/* CTA Section */}
+        <section className="section border-t border-line">
+          <div className="container text-center">
+            <p className="eyebrow mb-4">// want to explore more?</p>
+            <h2 className="heading-2 mb-6">Check Out My Work</h2>
+            <div className="flex flex-wrap gap-4 justify-center">
+              <Link href="/projects" className="btn-secondary">
+                View Projects
+              </Link>
+              <Link href="/about" className="btn-secondary">
+                Learn About Me
+              </Link>
             </div>
           </div>
         </section>

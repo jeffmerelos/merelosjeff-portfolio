@@ -4,9 +4,38 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
 const api = axios.create({
   baseURL: `${API_URL}/api`,
-  timeout: 10000,
-  headers: { 'Content-Type': 'application/json' },
+  timeout: 30000, // Increased from 10000 to 30 seconds for Vercel cold starts
+  headers: { 
+    'Content-Type': 'application/json',
+  },
+  withCredentials: false, // Important for cross-origin requests
 });
+
+// Add response interceptor for better error logging
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response) {
+      // Server responded with error status
+      console.error('API Error Response:', {
+        status: error.response.status,
+        data: error.response.data,
+        url: error.response.config.url,
+      });
+    } else if (error.request) {
+      // Request made but no response received
+      console.error('Network Error (No Response):', {
+        message: error.message,
+        code: error.code,
+        url: error.config?.url,
+      });
+    } else {
+      // Error in request setup
+      console.error('Request Setup Error:', error.message);
+    }
+    return Promise.reject(error);
+  }
+);
 
 // ─── Profile ────────────────────────────────────────────────
 export const getProfile = async () => {

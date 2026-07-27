@@ -34,9 +34,27 @@ const PORT = process.env.PORT || 5000;
 
 // ─── Security ──────────────────────────────────────────────────────────────
 app.use(helmet());
+
+// Allow multiple frontend URLs (development and production)
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:3001',
+  'https://merelosjeff-portfolio.vercel.app',
+  'https://merelosjeff-portfolio-frontend.vercel.app',
+  process.env.CORS_ORIGIN,
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.warn(`CORS blocked origin: ${origin}`);
+        callback(new Error('CORS not allowed'));
+      }
+    },
     methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
