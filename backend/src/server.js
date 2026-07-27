@@ -39,7 +39,6 @@ app.use(helmet());
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:3001',
-  'https://merelosjeff-portfolio.vercel.app',
   'https://merelosjeff-portfolio-frontend.vercel.app',
   process.env.CORS_ORIGIN,
 ].filter(Boolean);
