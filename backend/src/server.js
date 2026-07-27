@@ -178,23 +178,14 @@ app.use(notFound);
 app.use(errorHandler);
 
 // ─── Start ─────────────────────────────────────────────────────────────────
-// For local development
+// For local development only
 if (process.env.NODE_ENV !== 'production') {
-  const start = async () => {
-    try {
-      await testConnection();
-      app.listen(PORT, () => {
-        console.log(`\n🚀 Backend API running on http://localhost:${PORT}`);
-        console.log(`   Health: http://localhost:${PORT}/health`);
-        console.log(`   Env:    ${process.env.NODE_ENV || 'development'}\n`);
-      });
-    } catch (err) {
-      console.error('Failed to start server:', err);
-      process.exit(1);
-    }
-  };
-
-  start();
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`\n🚀 Backend API running on http://localhost:${PORT}`);
+    console.log(`   Health: http://localhost:${PORT}/health`);
+    console.log(`   Env:    ${process.env.NODE_ENV || 'development'}\n`);
+  });
 }
 
 // Export for Vercel serverless functions
