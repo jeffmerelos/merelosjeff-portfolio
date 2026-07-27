@@ -187,6 +187,21 @@ export default function ContactPage() {
         <section className="section">
           <div className="container max-w-2xl">
             <div className="card">
+              {/* Reserved space for messages - prevents layout shift */}
+              <div className="mb-6 min-h-24">
+                {submitStatus.type === 'success' && (
+                  <div className="p-4 rounded-lg bg-neon-pink/10 border border-neon-pink text-neon-pink animate-in fade-in">
+                    ✅ {submitStatus.message}
+                  </div>
+                )}
+
+                {submitStatus.type === 'error' && (
+                  <div className="p-4 rounded-lg bg-neon-pink/10 border border-neon-pink text-neon-pink animate-in fade-in">
+                    ❌ {submitStatus.message}
+                  </div>
+                )}
+              </div>
+
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Name Field */}
                 <div>
@@ -288,19 +303,6 @@ export default function ContactPage() {
                     </p>
                   </div>
                 </div>
-
-                {/* Status Messages */}
-                {submitStatus.type === 'success' && (
-                  <div className="p-4 rounded-lg bg-neon-pink/10 border border-neon-pink text-neon-pink">
-                    ✅ {submitStatus.message}
-                  </div>
-                )}
-
-                {submitStatus.type === 'error' && (
-                  <div className="p-4 rounded-lg bg-neon-pink/10 border border-neon-pink text-neon-pink">
-                    ❌ {submitStatus.message}
-                  </div>
-                )}
 
                 {/* Submit Button */}
                 <button
