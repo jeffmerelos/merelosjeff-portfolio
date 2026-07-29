@@ -71,8 +71,8 @@ export default function AboutPage() {
               className="max-w-4xl mx-auto"
             >
               <p className="eyebrow mb-4">// about me</p>
-              <h1 className="heading-1 mb-6">
-                Hi, I'm <span className="text-gradient">{profile.full_name.split(' ')[0]}</span>
+              <h1 className="heading-1 mb-6 text-balance">
+                Hi, I'm <span className="text-gradient">Jefferson B. Merelos</span>
               </h1>
               
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
