@@ -113,7 +113,7 @@ export default function AboutPage() {
                     </div>
 
                     {profile.resume_url && (
-                      <a href={profile.resume_url} download className="btn-primary w-full mt-4">
+                      <a href={profile.resume_url} download className="btn-primary w-full mt-2">
                         <Download size={16} /> Download My Resume
                       </a>
                     )}
