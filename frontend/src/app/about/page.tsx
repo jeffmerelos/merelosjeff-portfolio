@@ -100,7 +100,9 @@ export default function AboutPage() {
                       <img 
                         src="/images/CV attire.png" 
                         alt={profile.full_name} 
-                        className="w-full h-full object-cover object-center"
+                        className="w-full h-full object-cover object-center select-none pointer-events-none"
+                        draggable={false}
+                        onContextMenu={(e) => e.preventDefault()}
                       />
                     </div>
                     <h2 className="font-display font-bold text-lg mb-1">{profile.full_name}</h2>

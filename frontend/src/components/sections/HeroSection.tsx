@@ -122,7 +122,9 @@ export default function HeroSection() {
                 <img 
                   src="/images/CV attire.png" 
                   alt="Jefferson Bacaro Merelos" 
-                  className="w-full h-full object-cover object-center"
+                  className="w-full h-full object-cover object-center select-none pointer-events-none"
+                  draggable={false}
+                  onContextMenu={(e) => e.preventDefault()}
                 />
               </div>
 
