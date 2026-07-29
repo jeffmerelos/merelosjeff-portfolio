@@ -120,9 +120,9 @@ export default function HeroSection() {
               {/* Avatar */}
               <div className="absolute inset-2 rounded-full bg-bg-panel border border-neon-pink/50 overflow-hidden shadow-neon-pink-lg flex items-center justify-center">
                 <img 
-                  src="/images/profile2.png" 
+                  src="/images/CV attire.png" 
                   alt="Jefferson Bacaro Merelos" 
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover object-center"
                 />
               </div>
 

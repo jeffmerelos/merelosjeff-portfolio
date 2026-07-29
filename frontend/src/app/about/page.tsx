@@ -98,9 +98,9 @@ export default function AboutPage() {
                   <div className="card text-center mb-6">
                     <div className="w-32 h-32 mx-auto mb-4 rounded-full bg-gradient-to-br from-neon-pink to-neon-violet flex items-center justify-center text-2xl font-display font-bold overflow-hidden">
                       <img 
-                        src="/images/profile2.png" 
+                        src="/images/CV attire.png" 
                         alt={profile.full_name} 
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover object-center"
                       />
                     </div>
                     <h2 className="font-display font-bold text-lg mb-1">{profile.full_name}</h2>
