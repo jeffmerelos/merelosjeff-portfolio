@@ -5,7 +5,7 @@ import Footer from '@/components/layout/Footer';
 import { getSkills } from '@/lib/api';
 import { motion } from 'framer-motion';
 import { Download, Mail, MapPin, Code } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface Skill {
   id: number;
@@ -20,6 +20,8 @@ interface Skill {
 export default function AboutPage() {
   const [skills, setSkills] = useState<Skill[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isScrolledToEnd, setIsScrolledToEnd] = useState(false);
+  const storyContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     getSkills()
@@ -32,6 +34,16 @@ export default function AboutPage() {
       })
       .finally(() => setLoading(false));
   }, []);
+
+  // Handle scroll detection for story container
+  const handleStoryScroll = () => {
+    if (storyContainerRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = storyContainerRef.current;
+      // Check if scrolled to near the end (within 50px)
+      const isAtEnd = scrollHeight - scrollTop - clientHeight < 50;
+      setIsScrolledToEnd(isAtEnd);
+    }
+  };
 
   // Hardcoded profile data
   const profile = {
@@ -113,8 +125,9 @@ export default function AboutPage() {
                     </div>
 
                     {profile.resume_url && (
-                      <a href={profile.resume_url} download className="btn-primary w-full mt-2">
-                        <Download size={16} /> Download My Resume
+                      <a href={profile.resume_url} download className="btn-primary w-full mt-2 whitespace-nowrap inline-flex items-center justify-center gap-2">
+                        <Download size={16} />
+                        <span>Download CV</span>
                       </a>
                     )}
                   </div>
@@ -127,9 +140,13 @@ export default function AboutPage() {
                   transition={{ delay: 0.2 }}
                   className="lg:col-span-2"
                 >
-                  <div className="card mb-6">
+                  <div className="card mb-6 h-full flex flex-col">
                     <h3 className="eyebrow mb-4">My Story</h3>
-                    <div className="prose prose-invert max-w-none">
+                    <div 
+                      ref={storyContainerRef}
+                      onScroll={handleStoryScroll}
+                      className="prose prose-invert max-w-none flex-1 overflow-y-auto pr-3"
+                    >
                       <p className="text-text-muted leading-relaxed mb-4">
                         Hello! I'm Jefferson Bacaro Merelos, a passionate Software Developer and a graduate of Cebu Technological University – Naga Extension Campus, where I earned my Bachelor of Science in Information Technology, Major in Programming.
                       </p>
@@ -152,6 +169,19 @@ export default function AboutPage() {
                       
                       <p className="text-text-muted leading-relaxed">
                         To learn more about my education, technical skills, projects, and experience, please feel free to explore my Curriculum Vitae (CV).
+                      </p>
+                    </div>
+                    
+                    {/* Reading Indicator */}
+                    <div className="mt-4 pt-4 border-t border-line">
+                      <p className={`text-xs font-mono transition-all duration-300 ${
+                        isScrolledToEnd 
+                          ? 'text-neon-blue' 
+                          : 'text-neon-pink animate-pulse'
+                      }`}>
+                        {isScrolledToEnd 
+                          ? '✓ You\'ve reached the end of Jeff\'s story.' 
+                          : '↓ Continue reading Jeff\'s story...'}
                       </p>
                     </div>
                   </div>
