@@ -79,7 +79,7 @@ export default function Navbar() {
               aria-label="Download Resume PDF"
             >
               <Download size={15} />
-              Resume
+              Download My Resume
             </a>
 
             <button
@@ -140,7 +140,7 @@ export default function Navbar() {
                 className="btn-primary mt-12 w-fit"
               >
                 <Download size={18} />
-                Download Resume
+                Download My Resume
               </motion.a>
             </nav>
           </motion.div>

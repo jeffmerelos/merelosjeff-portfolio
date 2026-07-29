@@ -21,7 +21,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Jeff - Software Developer Portfolio',
+  title: 'Jefferson B. Merelos Portfolio',
   description: 'Junior software developer building fast, accessible web apps. Portfolio showcasing projects, skills, and experience.',
   keywords: ['junior software developer', 'react', 'node.js', 'web development', 'portfolio'],
   authors: [{ name: 'Jeff Developer' }],

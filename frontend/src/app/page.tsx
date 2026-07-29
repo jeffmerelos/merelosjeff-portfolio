@@ -53,7 +53,7 @@ export default function HomePage() {
                 download="Jeff-Developer-CV.pdf"
                 className="btn-secondary"
               >
-                Download CV
+                Download My Resume
               </a>
             </div>
           </div>

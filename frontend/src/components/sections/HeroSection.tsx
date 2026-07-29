@@ -99,7 +99,7 @@ export default function HeroSection() {
               </Link>
               <a href="/files/Jeff-CV.pdf" download="Jeff-Developer-CV.pdf" className="btn-secondary">
                 <Download size={18} />
-                Download CV
+                Download My Resume
               </a>
             </motion.div>
           </motion.div>
