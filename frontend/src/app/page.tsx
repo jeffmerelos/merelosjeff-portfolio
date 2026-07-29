@@ -12,26 +12,6 @@ export default function HomePage() {
       <main>
         <HeroSection />
         
-        {/* Stats Strip */}
-        <section className="section border-t border-line bg-bg-panel/30">
-          <div className="container">
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-8 text-center">
-              {[
-                { label: 'Years Experience', value: '5+' },
-                { label: 'Projects Shipped', value: '30+' },
-                { label: 'Happy Clients', value: '12+' },
-              ].map((stat) => (
-                <div key={stat.label}>
-                  <div className="heading-2 text-gradient mb-2">{stat.value}</div>
-                  <div className="text-text-muted text-sm font-mono uppercase tracking-wider">
-                    {stat.label}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
         {/* CTA Section */}
         <section className="section border-t border-line bg-gradient-to-br from-neon-pink/5 via-transparent to-neon-violet/5">
           <div className="container text-center">
