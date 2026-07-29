@@ -362,7 +362,7 @@ export default function ContactPage() {
                           name="name"
                           value={formData.name}
                           onChange={handleChange}
-                          placeholder="John Doe"
+                          placeholder="Jefferson B. Merelos"
                           className={`w-full px-4 py-3 rounded-lg bg-bg-void border ${
                             errors.name
                               ? 'border-neon-pink focus:border-neon-pink focus:shadow-neon-pink'
@@ -389,7 +389,7 @@ export default function ContactPage() {
                           name="email"
                           value={formData.email}
                           onChange={handleChange}
-                          placeholder="john@example.com"
+                          placeholder="merelosjeft@gmail.com"
                           className={`w-full px-4 py-3 rounded-lg bg-bg-void border ${
                             errors.email
                               ? 'border-neon-pink focus:border-neon-pink focus:shadow-neon-pink'
