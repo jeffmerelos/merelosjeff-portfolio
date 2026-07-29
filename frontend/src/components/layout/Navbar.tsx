@@ -75,11 +75,11 @@ export default function Navbar() {
             <a
               href="/files/Jeff-CV.pdf"
               download="Jeff-Developer-CV.pdf"
-              className="hidden md:inline-flex btn-secondary text-sm py-2 px-4"
+              className="hidden md:inline-flex btn-secondary text-sm py-2 px-4 items-center gap-2"
               aria-label="Download Resume PDF"
             >
               <Download size={15} />
-              Download My Resume
+              <span>Download My Resume</span>
             </a>
 
             <button
@@ -137,10 +137,10 @@ export default function Navbar() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.4 }}
-                className="btn-primary mt-12 w-fit"
+                className="btn-primary mt-12 w-fit inline-flex items-center gap-2"
               >
                 <Download size={18} />
-                Download My Resume
+                <span>Download My Resume</span>
               </motion.a>
             </nav>
           </motion.div>

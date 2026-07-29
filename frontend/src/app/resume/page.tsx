@@ -60,11 +60,13 @@ export default function ResumePage() {
                 </h1>
               </div>
               <div className="flex gap-3">
-                <a href="/files/Jeff-CV.pdf" download="Jeff-Developer-CV.pdf" className="btn-primary">
-                  <Download size={18} /> Download PDF
+                <a href="/files/Jeff-CV.pdf" download="Jeff-Developer-CV.pdf" className="btn-primary inline-flex items-center justify-center gap-2">
+                  <Download size={18} />
+                  <span>Download PDF</span>
                 </a>
-                <button onClick={() => window.print()} className="btn-secondary">
-                  <Printer size={18} /> Print
+                <button onClick={() => window.print()} className="btn-secondary inline-flex items-center justify-center gap-2">
+                  <Printer size={18} />
+                  <span>Print</span>
                 </button>
               </div>
             </div>

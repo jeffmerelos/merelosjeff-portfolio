@@ -4,6 +4,7 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import HeroSection from '@/components/sections/HeroSection';
 import Link from 'next/link';
+import { Download } from 'lucide-react';
 
 export default function HomePage() {
   return (
@@ -31,9 +32,10 @@ export default function HomePage() {
               <a 
                 href="/files/Jeff-CV.pdf" 
                 download="Jeff-Developer-CV.pdf"
-                className="btn-secondary"
+                className="btn-secondary inline-flex items-center justify-center gap-2"
               >
-                Download My Resume
+                <Download size={18} />
+                <span>Download My Resume</span>
               </a>
             </div>
           </div>

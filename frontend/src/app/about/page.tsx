@@ -126,7 +126,7 @@ export default function AboutPage() {
 
                     {profile.resume_url && (
                       <a href={profile.resume_url} download className="btn-primary w-full mt-2 whitespace-nowrap inline-flex items-center justify-center gap-2">
-                        <Download size={10} />
+                        <Download size={16} />
                         <span>Download My Resume</span>
                       </a>
                     )}

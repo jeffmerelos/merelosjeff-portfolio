@@ -175,8 +175,9 @@ export default function ExperiencePage() {
 
             {/* Resume CTA */}
             <div className="mt-16 text-center">
-              <a href="/files/jeff-cv.pdf" download className="btn-primary">
-                <Download size={18} /> Download My Resume
+              <a href="/files/jeff-cv.pdf" download className="btn-primary inline-flex items-center justify-center gap-2">
+                <Download size={18} />
+                <span>Download My Resume</span>
               </a>
             </div>
           </div>

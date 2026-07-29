@@ -97,9 +97,9 @@ export default function HeroSection() {
               <Link href="/projects" className="btn-primary">
                 ▸ View Projects
               </Link>
-              <a href="/files/Jeff-CV.pdf" download="Jeff-Developer-CV.pdf" className="btn-secondary">
+              <a href="/files/Jeff-CV.pdf" download="Jeff-Developer-CV.pdf" className="btn-secondary inline-flex items-center justify-center gap-2">
                 <Download size={18} />
-                Download My Resume
+                <span>Download My Resume</span>
               </a>
             </motion.div>
           </motion.div>
