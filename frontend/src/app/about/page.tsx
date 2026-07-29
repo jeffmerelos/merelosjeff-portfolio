@@ -126,8 +126,8 @@ export default function AboutPage() {
 
                     {profile.resume_url && (
                       <a href={profile.resume_url} download className="btn-primary w-full mt-2 whitespace-nowrap inline-flex items-center justify-center gap-2">
-                        <Download size={16} />
-                        <span>Download CV</span>
+                        <Download size={10} />
+                        <span>Download My Resume</span>
                       </a>
                     )}
                   </div>
@@ -160,7 +160,7 @@ export default function AboutPage() {
                       </p>
                       
                       <p className="text-text-muted leading-relaxed mb-4">
-                        One of the projects I am most proud of is a Web-Based Time In and Out System with Face Recognition and SMS Verification, developed to enhance student safety and attendance monitoring. The system combines RFID authentication, facial recognition, and real-time SMS notifications to provide a secure and efficient solution for educational institutions.
+                        One of the projects I am most proud of is a Web-Based Time In and Out System with Face Recognition and SMS Verification, developed to enhance student safety and attendance monitoring. The system combines RFID authentication, facial recognition, and real-time SMS notifications to provide a secure and efficient solution for educational institutions. I am especially proud that we successfully deployed and implemented this system at Mohon Divino (Amore) National High School, located in Mohon, Talisay City, Cebu. Witnessing the system transition from development to real-world implementation was an incredibly rewarding experience, as it demonstrated how our work could positively impact the school's daily operations and improve the safety and efficiency of student attendance monitoring. This achievement strengthened my confidence as a developer and reinforced my passion for building innovative, reliable, and user-centered solutions that create meaningful value in real-world environments.
                       </p>
                       
                       <p className="text-text-muted leading-relaxed mb-4">
