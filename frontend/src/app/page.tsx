@@ -1,41 +1,25 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import HeroSection from '@/components/sections/HeroSection';
-import { getProfile } from '@/lib/api';
 import Link from 'next/link';
 
-interface Profile {
-  years_experience: number;
-  projects_shipped: number;
-  happy_clients: number;
-}
-
 export default function HomePage() {
-  const [profile, setProfile] = useState<Profile | null>(null);
-
-  useEffect(() => {
-    getProfile()
-      .then(setProfile)
-      .catch(console.error);
-  }, []);
-
   return (
     <div id="top">
       <Navbar />
       <main>
         <HeroSection />
         
-        {/* Stats Strip - From API */}
+        {/* Stats Strip */}
         <section className="section border-t border-line bg-bg-panel/30">
           <div className="container">
             <div className="grid grid-cols-2 md:grid-cols-3 gap-8 text-center">
               {[
-                { label: 'Years Experience', value: `${profile?.years_experience || 8}+` },
-                { label: 'Projects Shipped', value: `${profile?.projects_shipped || 45}+` },
-                { label: 'Happy Clients', value: `${profile?.happy_clients || 18}+` },
+                { label: 'Years Experience', value: '5+' },
+                { label: 'Projects Shipped', value: '30+' },
+                { label: 'Happy Clients', value: '12+' },
               ].map((stat) => (
                 <div key={stat.label}>
                   <div className="heading-2 text-gradient mb-2">{stat.value}</div>

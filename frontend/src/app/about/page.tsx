@@ -42,9 +42,6 @@ export default function AboutPage() {
     email: 'merelosjeff@gmail.com',
     availability_status: 'available' as const,
     resume_url: '/files/Jeff-CV.pdf',
-    years_experience: 2,
-    projects_shipped: 15,
-    happy_clients: 8,
   };
 
   const availabilityColors = {
@@ -120,25 +117,6 @@ export default function AboutPage() {
                         <Download size={16} /> Download CV
                       </a>
                     )}
-                  </div>
-
-                  {/* Quick Stats */}
-                  <div className="card">
-                    <h3 className="eyebrow mb-4">Quick Stats</h3>
-                    <div className="space-y-3">
-                      <div className="flex justify-between items-center">
-                        <span className="text-text-muted text-sm">Experience</span>
-                        <span className="font-mono text-neon-pink">{profile.years_experience}+ years</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-text-muted text-sm">Projects</span>
-                        <span className="font-mono text-neon-violet">{profile.projects_shipped}+ shipped</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-text-muted text-sm">Clients</span>
-                        <span className="font-mono text-neon-blue">{profile.happy_clients}+ happy</span>
-                      </div>
-                    </div>
                   </div>
                 </motion.div>
 
