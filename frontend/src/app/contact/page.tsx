@@ -251,90 +251,92 @@ export default function ContactPage() {
           </div>
         </section>
 
-        {/* Contact Section - Horizontal Layout */}
+        {/* Contact Section - Horizontal Layout with Equal Heights */}
         <section className="section">
           <div className="container max-w-7xl">
-            <div className="grid lg:grid-cols-5 gap-8">
+            <div className="grid lg:grid-cols-5 gap-8 items-stretch">
               
               {/* Left Side - Contact Info */}
-              <div className="lg:col-span-2 space-y-6">
-                <div className="card-hover h-full">
+              <div className="lg:col-span-2">
+                <div className="card-hover h-full flex flex-col">
                   <h2 className="heading-3 mb-6 text-gradient">Contact Info</h2>
                   
-                  {/* Email */}
-                  <div className="mb-6 group">
-                    <div className="flex items-start gap-4 p-4 rounded-lg bg-bg-void/50 border border-line hover:border-neon-blue transition-all duration-300">
-                      <div className="w-12 h-12 rounded-full bg-neon-blue/10 flex items-center justify-center flex-shrink-0 group-hover:shadow-neon-blue transition-all duration-300">
-                        <Mail className="w-6 h-6 text-neon-blue" />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-sm font-mono text-text-muted uppercase mb-1">
-                          Email
-                        </h3>
-                        <a
-                          href="mailto:jeffmerelos@gmail.com"
-                          className="text-text-primary hover:text-neon-blue transition-colors duration-200 break-all"
-                        >
-                          jeffmerelos@gmail.com
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Location */}
-                  <div className="mb-6 group">
-                    <div className="flex items-start gap-4 p-4 rounded-lg bg-bg-void/50 border border-line hover:border-neon-violet transition-all duration-300">
-                      <div className="w-12 h-12 rounded-full bg-neon-violet/10 flex items-center justify-center flex-shrink-0 group-hover:shadow-neon-violet transition-all duration-300">
-                        <MapPin className="w-6 h-6 text-neon-violet" />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-sm font-mono text-text-muted uppercase mb-1">
-                          Location
-                        </h3>
-                        <p className="text-text-primary">
-                          Available Worldwide
-                        </p>
-                        <p className="text-text-muted text-sm mt-1">
-                          Remote Work Preferred
-                        </p>
+                  <div className="flex-1 flex flex-col justify-between space-y-4">
+                    {/* Email */}
+                    <div className="group">
+                      <div className="flex items-start gap-4 p-4 rounded-lg bg-bg-void/50 border border-line hover:border-neon-blue transition-all duration-300">
+                        <div className="w-12 h-12 rounded-full bg-neon-blue/10 flex items-center justify-center flex-shrink-0 group-hover:shadow-neon-blue transition-all duration-300">
+                          <Mail className="w-6 h-6 text-neon-blue" />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-sm font-mono text-text-muted uppercase mb-1">
+                            Email
+                          </h3>
+                          <a
+                            href="mailto:jeffmerelos@gmail.com"
+                            className="text-text-primary hover:text-neon-blue transition-colors duration-200 break-all text-sm"
+                          >
+                            jeffmerelos@gmail.com
+                          </a>
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Response Time */}
-                  <div className="group">
-                    <div className="flex items-start gap-4 p-4 rounded-lg bg-bg-void/50 border border-line hover:border-neon-pink transition-all duration-300">
-                      <div className="w-12 h-12 rounded-full bg-neon-pink/10 flex items-center justify-center flex-shrink-0 group-hover:shadow-neon-pink transition-all duration-300">
-                        <Clock className="w-6 h-6 text-neon-pink" />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-sm font-mono text-text-muted uppercase mb-1">
-                          Response Time
-                        </h3>
-                        <p className="text-text-primary">
-                          24-48 Hours
-                        </p>
-                        <p className="text-text-muted text-sm mt-1">
-                          Usually within a day
-                        </p>
+                    {/* Location */}
+                    <div className="group">
+                      <div className="flex items-start gap-4 p-4 rounded-lg bg-bg-void/50 border border-line hover:border-neon-violet transition-all duration-300">
+                        <div className="w-12 h-12 rounded-full bg-neon-violet/10 flex items-center justify-center flex-shrink-0 group-hover:shadow-neon-violet transition-all duration-300">
+                          <MapPin className="w-6 h-6 text-neon-violet" />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-sm font-mono text-text-muted uppercase mb-1">
+                            Location
+                          </h3>
+                          <p className="text-text-primary text-sm">
+                            Available Worldwide
+                          </p>
+                          <p className="text-text-muted text-xs mt-1">
+                            Remote Work Preferred
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Availability Status */}
-                  <div className="mt-6 p-4 rounded-lg bg-gradient-to-r from-neon-blue/10 to-neon-violet/10 border border-neon-blue/50">
-                    <div className="flex items-center gap-3">
-                      <div className="relative">
-                        <div className="w-3 h-3 rounded-full bg-neon-blue animate-pulse" />
-                        <div className="absolute inset-0 w-3 h-3 rounded-full bg-neon-blue animate-ping" />
+                    {/* Response Time */}
+                    <div className="group">
+                      <div className="flex items-start gap-4 p-4 rounded-lg bg-bg-void/50 border border-line hover:border-neon-pink transition-all duration-300">
+                        <div className="w-12 h-12 rounded-full bg-neon-pink/10 flex items-center justify-center flex-shrink-0 group-hover:shadow-neon-pink transition-all duration-300">
+                          <Clock className="w-6 h-6 text-neon-pink" />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-sm font-mono text-text-muted uppercase mb-1">
+                            Response Time
+                          </h3>
+                          <p className="text-text-primary text-sm">
+                            24-48 Hours
+                          </p>
+                          <p className="text-text-muted text-xs mt-1">
+                            Usually within a day
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="font-medium text-neon-blue">
-                          Available for New Projects
-                        </p>
-                        <p className="text-xs text-text-muted mt-0.5">
-                          Let's build something amazing together
-                        </p>
+                    </div>
+
+                    {/* Availability Status */}
+                    <div className="p-4 rounded-lg bg-gradient-to-r from-neon-blue/10 to-neon-violet/10 border border-neon-blue/50">
+                      <div className="flex items-center gap-3">
+                        <div className="relative flex-shrink-0">
+                          <div className="w-3 h-3 rounded-full bg-neon-blue animate-pulse" />
+                          <div className="absolute inset-0 w-3 h-3 rounded-full bg-neon-blue animate-ping" />
+                        </div>
+                        <div>
+                          <p className="font-medium text-neon-blue text-sm">
+                            Available for New Projects
+                          </p>
+                          <p className="text-xs text-text-muted mt-0.5">
+                            Let's build something amazing together
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -343,12 +345,12 @@ export default function ContactPage() {
 
               {/* Right Side - Contact Form */}
               <div className="lg:col-span-3">
-                <div className="card-hover">
+                <div className="card-hover h-full flex flex-col">
                   <h2 className="heading-3 mb-6 text-gradient">Send a Message</h2>
 
-                  <form onSubmit={handleSubmit} className="space-y-5">
+                  <form onSubmit={handleSubmit} className="flex-1 flex flex-col space-y-4">
                     {/* Name & Email Row */}
-                    <div className="grid md:grid-cols-2 gap-5">
+                    <div className="grid md:grid-cols-2 gap-4">
                       {/* Name Field */}
                       <div>
                         <label htmlFor="name" className="block text-sm font-medium mb-2 text-text-primary">
@@ -431,8 +433,8 @@ export default function ContactPage() {
                       )}
                     </div>
 
-                    {/* Message Field */}
-                    <div>
+                    {/* Message Field - Flexible Height */}
+                    <div className="flex-1 flex flex-col">
                       <label htmlFor="message" className="block text-sm font-medium mb-2 text-text-primary">
                         Message <span className="text-neon-pink">*</span>
                       </label>
@@ -442,12 +444,11 @@ export default function ContactPage() {
                         value={formData.message}
                         onChange={handleChange}
                         placeholder="Tell me about your project or question..."
-                        rows={8}
-                        className={`w-full px-4 py-3 rounded-lg bg-bg-void border ${
+                        className={`flex-1 w-full px-4 py-3 rounded-lg bg-bg-void border ${
                           errors.message
                             ? 'border-neon-pink focus:border-neon-pink focus:shadow-neon-pink'
                             : 'border-line focus:border-neon-blue focus:shadow-neon-blue'
-                        } text-text-primary placeholder-text-muted transition-all duration-300 outline-none resize-none`}
+                        } text-text-primary placeholder-text-muted transition-all duration-300 outline-none resize-none min-h-[180px]`}
                         disabled={isSubmitting}
                       />
                       <div className="flex justify-between items-center mt-2">
