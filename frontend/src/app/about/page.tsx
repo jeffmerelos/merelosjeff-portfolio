@@ -36,8 +36,8 @@ export default function AboutPage() {
   // Hardcoded profile data
   const profile = {
     full_name: 'Jefferson Bacaro Merelos',
-    title: 'Software Developer',
-    location: 'Naga City, Cebu, Philippines',
+    title: 'Junior Software Developer',
+    location: 'Gaway-gaway, Uling City of Naga, Cebu Philippines',
     timezone: 'UTC+8 (Philippine Time)',
     email: 'merelosjeff@gmail.com',
     availability_status: 'available' as const,
