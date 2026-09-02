@@ -276,7 +276,7 @@ export default function ContactPage() {
                             href="mailto:merelosjeft@gmail.com"
                             className="text-text-primary hover:text-neon-blue transition-colors duration-200 break-all text-sm"
                           >
-                            jeffmerelos@gmail.com
+                            merelosjeft@gmail.com
                           </a>
                         </div>
                       </div>
