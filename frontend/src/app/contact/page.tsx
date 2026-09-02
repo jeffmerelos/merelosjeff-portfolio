@@ -273,7 +273,7 @@ export default function ContactPage() {
                             Email
                           </h3>
                           <a
-                            href="mailto:jeffmerelos@gmail.com"
+                            href="mailto:merelosjeft@gmail.com"
                             className="text-text-primary hover:text-neon-blue transition-colors duration-200 break-all text-sm"
                           >
                             jeffmerelos@gmail.com
