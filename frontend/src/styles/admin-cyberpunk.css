@@ -1,0 +1,805 @@
+/* ============================================
+   CYBERPUNK ADMIN PORTAL - GLOBAL STYLES
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap');
+
+/* ============================================
+   CUSTOM PROPERTIES
+   ============================================ */
+
+:root {
+  /* Cyberpunk Colors */
+  --cyber-black: #000000;
+  --cyber-deep-black: #0a0a0a;
+  --cyber-dark-gray: #111111;
+  --cyber-card-bg: #141418;
+  --cyber-border: #2a2a35;
+  
+  /* Neon Colors */
+  --neon-cyan: #00f0ff;
+  --neon-magenta: #ff00ff;
+  --neon-green: #00ff41;
+  --neon-yellow: #ffff00;
+  --neon-red: #ff0040;
+  
+  /* Glow */
+  --glow-cyan: rgba(0, 240, 255, 0.5);
+  --glow-magenta: rgba(255, 0, 255, 0.5);
+  --glow-green: rgba(0, 255, 65, 0.5);
+  --glow-red: rgba(255, 0, 64, 0.5);
+}
+
+/* ============================================
+   BASE ADMIN STYLES
+   ============================================ */
+
+.admin-portal {
+  font-family: 'Inter', 'IBM Plex Sans', sans-serif;
+  background-color: var(--cyber-black);
+  color: #ffffff;
+  min-height: 100vh;
+}
+
+/* ============================================
+   NEON BUTTON STYLES
+   ============================================ */
+
+.cyber-button {
+  position: relative;
+  padding: 0.75rem 1.5rem;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: transparent;
+  border: 2px solid var(--neon-cyan);
+  color: var(--neon-cyan);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.cyber-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, var(--glow-cyan), transparent);
+  transition: left 0.5s ease;
+}
+
+.cyber-button:hover {
+  background: var(--glow-cyan);
+  box-shadow: 0 0 20px var(--glow-cyan), 0 0 40px var(--glow-cyan), inset 0 0 10px var(--glow-cyan);
+  text-shadow: 0 0 10px var(--neon-cyan);
+}
+
+.cyber-button:hover::before {
+  left: 100%;
+}
+
+.cyber-button:active {
+  transform: scale(0.98);
+}
+
+/* Button Variants */
+.cyber-button-magenta {
+  border-color: var(--neon-magenta);
+  color: var(--neon-magenta);
+}
+
+.cyber-button-magenta:hover {
+  background: var(--glow-magenta);
+  box-shadow: 0 0 20px var(--glow-magenta), 0 0 40px var(--glow-magenta);
+}
+
+.cyber-button-green {
+  border-color: var(--neon-green);
+  color: var(--neon-green);
+}
+
+.cyber-button-green:hover {
+  background: var(--glow-green);
+  box-shadow: 0 0 20px var(--glow-green), 0 0 40px var(--glow-green);
+}
+
+.cyber-button-red {
+  border-color: var(--neon-red);
+  color: var(--neon-red);
+}
+
+.cyber-button-red:hover {
+  background: var(--glow-red);
+  box-shadow: 0 0 20px var(--glow-red), 0 0 40px var(--glow-red);
+}
+
+/* ============================================
+   NEON INPUT STYLES
+   ============================================ */
+
+.cyber-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-family: 'Inter', sans-serif;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--cyber-border);
+  border-bottom: 2px solid var(--neon-cyan);
+  color: #ffffff;
+  transition: all 0.3s ease;
+}
+
+.cyber-input:focus {
+  outline: none;
+  background: rgba(0, 0, 0, 0.7);
+  border-bottom-color: var(--neon-cyan);
+  box-shadow: 0 4px 15px var(--glow-cyan), inset 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.cyber-input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* ============================================
+   CYBER CARD STYLES
+   ============================================ */
+
+.cyber-card {
+  background: linear-gradient(135deg, rgba(20, 20, 24, 0.9), rgba(10, 10, 10, 0.9));
+  border: 1px solid var(--cyber-border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.cyber-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-magenta), var(--neon-green));
+  opacity: 0.5;
+}
+
+.cyber-card:hover {
+  border-color: var(--neon-cyan);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 1px var(--glow-cyan);
+  transform: translateY(-2px);
+}
+
+.cyber-card:hover::before {
+  opacity: 1;
+  animation: neon-flicker 3s linear infinite;
+}
+
+/* ============================================
+   NEON BORDER EFFECTS
+   ============================================ */
+
+.neon-border-cyan {
+  border: 2px solid var(--neon-cyan);
+  box-shadow: 0 0 10px var(--glow-cyan), inset 0 0 10px rgba(0, 240, 255, 0.1);
+}
+
+.neon-border-magenta {
+  border: 2px solid var(--neon-magenta);
+  box-shadow: 0 0 10px var(--glow-magenta), inset 0 0 10px rgba(255, 0, 255, 0.1);
+}
+
+.neon-border-green {
+  border: 2px solid var(--neon-green);
+  box-shadow: 0 0 10px var(--glow-green), inset 0 0 10px rgba(0, 255, 65, 0.1);
+}
+
+/* ============================================
+   CYBER GRID BACKGROUND
+   ============================================ */
+
+.cyber-grid-bg {
+  background-image: 
+    linear-gradient(to right, rgba(0, 240, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 240, 255, 0.1) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: grid-flow 20s linear infinite;
+}
+
+/* ============================================
+   SCANLINE EFFECT
+   ============================================ */
+
+.scanline-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.scanline-effect::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(to bottom, transparent, rgba(0, 240, 255, 0.8), transparent);
+  animation: scanline 8s linear infinite;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+/* ============================================
+   GLITCH TEXT EFFECT
+   ============================================ */
+
+.glitch-text {
+  position: relative;
+  display: inline-block;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.8;
+}
+
+.glitch-text::before {
+  left: 2px;
+  text-shadow: -2px 0 var(--neon-cyan);
+  clip: rect(24px, 550px, 90px, 0);
+  animation: glitch-anim-2 3s infinite linear alternate-reverse;
+}
+
+.glitch-text::after {
+  left: -2px;
+  text-shadow: -2px 0 var(--neon-magenta);
+  clip: rect(85px, 550px, 140px, 0);
+  animation: glitch-anim 2.5s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim {
+  0% { clip: rect(61px, 9999px, 90px, 0); }
+  5% { clip: rect(30px, 9999px, 71px, 0); }
+  10% { clip: rect(20px, 9999px, 105px, 0); }
+  15% { clip: rect(66px, 9999px, 43px, 0); }
+  20% { clip: rect(96px, 9999px, 88px, 0); }
+  100% { clip: rect(1px, 9999px, 140px, 0); }
+}
+
+@keyframes glitch-anim-2 {
+  0% { clip: rect(19px, 9999px, 74px, 0); }
+  5% { clip: rect(82px, 9999px, 133px, 0); }
+  10% { clip: rect(53px, 9999px, 66px, 0); }
+  15% { clip: rect(90px, 9999px, 48px, 0); }
+  20% { clip: rect(40px, 9999px, 110px, 0); }
+  100% { clip: rect(24px, 9999px, 90px, 0); }
+}
+
+/* ============================================
+   NEON TEXT GLOW
+   ============================================ */
+
+.neon-text-cyan {
+  color: var(--neon-cyan);
+  text-shadow: 0 0 10px var(--glow-cyan), 0 0 20px var(--glow-cyan), 0 0 30px var(--glow-cyan);
+}
+
+.neon-text-magenta {
+  color: var(--neon-magenta);
+  text-shadow: 0 0 10px var(--glow-magenta), 0 0 20px var(--glow-magenta), 0 0 30px var(--glow-magenta);
+}
+
+.neon-text-green {
+  color: var(--neon-green);
+  text-shadow: 0 0 10px var(--glow-green), 0 0 20px var(--glow-green), 0 0 30px var(--glow-green);
+}
+
+/* ============================================
+   LOADING SPINNER
+   ============================================ */
+
+.cyber-spinner {
+  width: 50px;
+  height: 50px;
+  border: 3px solid transparent;
+  border-top-color: var(--neon-cyan);
+  border-right-color: var(--neon-magenta);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* ============================================
+   HOLOGRAPHIC EFFECT
+   ============================================ */
+
+.holographic {
+  background: linear-gradient(
+    135deg,
+    rgba(0, 240, 255, 0.2) 0%,
+    rgba(255, 0, 255, 0.2) 50%,
+    rgba(0, 255, 65, 0.2) 100%
+  );
+  background-size: 200% 200%;
+  animation: holographic-shift 3s ease infinite;
+}
+
+@keyframes holographic-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ============================================
+   SIDEBAR STYLES
+   ============================================ */
+
+.cyber-sidebar {
+  background: linear-gradient(180deg, rgba(10, 10, 10, 0.95), rgba(20, 20, 24, 0.95));
+  border-right: 1px solid var(--cyber-border);
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.cyber-sidebar-item {
+  padding: 1rem 1.5rem;
+  color: rgba(255, 255, 255, 0.7);
+  transition: all 0.3s ease;
+  border-left: 3px solid transparent;
+}
+
+.cyber-sidebar-item:hover {
+  color: var(--neon-cyan);
+  background: rgba(0, 240, 255, 0.05);
+  border-left-color: var(--neon-cyan);
+}
+
+.cyber-sidebar-item-active {
+  color: var(--neon-cyan);
+  background: rgba(0, 240, 255, 0.1);
+  border-left-color: var(--neon-cyan);
+  box-shadow: 0 0 15px var(--glow-cyan);
+}
+
+/* ============================================
+   TABLE STYLES
+   ============================================ */
+
+.cyber-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.cyber-table th {
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(255, 0, 255, 0.1));
+  border-bottom: 2px solid var(--neon-cyan);
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.875rem;
+}
+
+.cyber-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--cyber-border);
+}
+
+.cyber-table tr {
+  transition: all 0.2s ease;
+}
+
+.cyber-table tbody tr:hover {
+  background: rgba(0, 240, 255, 0.05);
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.1);
+}
+
+/* ============================================
+   TOGGLE SWITCH
+   ============================================ */
+
+.cyber-toggle {
+  position: relative;
+  width: 50px;
+  height: 24px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--cyber-border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cyber-toggle::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  background: #666;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.cyber-toggle-active {
+  background: var(--glow-cyan);
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 15px var(--glow-cyan);
+}
+
+.cyber-toggle-active::after {
+  left: 28px;
+  background: var(--neon-cyan);
+  box-shadow: 0 0 10px var(--glow-cyan);
+}
+
+/* ============================================
+   BADGE STYLES
+   ============================================ */
+
+.cyber-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 4px;
+  border: 1px solid;
+}
+
+.cyber-badge-success {
+  color: var(--neon-green);
+  border-color: var(--neon-green);
+  background: rgba(0, 255, 65, 0.1);
+  box-shadow: 0 0 10px var(--glow-green);
+}
+
+.cyber-badge-danger {
+  color: var(--neon-red);
+  border-color: var(--neon-red);
+  background: rgba(255, 0, 64, 0.1);
+  box-shadow: 0 0 10px var(--glow-red);
+}
+
+.cyber-badge-warning {
+  color: var(--neon-yellow);
+  border-color: var(--neon-yellow);
+  background: rgba(255, 255, 0, 0.1);
+  box-shadow: 0 0 10px rgba(255, 255, 0, 0.5);
+}
+
+.cyber-badge-info {
+  color: var(--neon-cyan);
+  border-color: var(--neon-cyan);
+  background: rgba(0, 240, 255, 0.1);
+  box-shadow: 0 0 10px var(--glow-cyan);
+}
+
+/* ============================================
+   SCROLLBAR STYLES
+   ============================================ */
+
+.cyber-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.cyber-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.cyber-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--neon-cyan);
+  border-radius: 4px;
+  box-shadow: 0 0 10px var(--glow-cyan);
+}
+
+.cyber-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--neon-magenta);
+  box-shadow: 0 0 15px var(--glow-magenta);
+}
+
+/* ============================================
+   RESPONSIVE UTILITIES
+   ============================================ */
+
+@media (max-width: 768px) {
+  .cyber-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .cyber-card {
+    padding: 1rem;
+  }
+  
+  .cyber-sidebar-item {
+    padding: 0.75rem 1rem;
+  }
+}
+
+/* ============================================
+   CYBERPUNK BACKGROUND EFFECTS
+   ============================================ */
+
+/* Scanline Animation */
+@keyframes scanline {
+  0% {
+    transform: translateY(-100vh);
+  }
+  100% {
+    transform: translateY(100vh);
+  }
+}
+
+/* Sliding Border Animations */
+@keyframes slide-right {
+  0%, 100% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  50% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-left {
+  0%, 100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  50% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Floating Particle Animation */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-10px) rotate(90deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(180deg);
+  }
+  75% {
+    transform: translateY(-10px) rotate(270deg);
+  }
+}
+
+/* Glitch Effect Animation */
+@keyframes glitch {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10% {
+    transform: translateX(-2px) skew(-2deg);
+  }
+  20% {
+    transform: translateX(2px) skew(2deg);
+  }
+  30% {
+    transform: translateX(-1px) skew(-1deg);
+  }
+  40% {
+    transform: translateX(1px) skew(1deg);
+  }
+  50% {
+    transform: translateX(0);
+  }
+}
+
+/* Holographic Shimmer */
+@keyframes holographic {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* ============================================
+   UTILITY CLASSES FOR EFFECTS
+   ============================================ */
+
+/* Animation Delay Utilities */
+.animation-delay-500 {
+  animation-delay: 500ms;
+}
+
+.animation-delay-1000 {
+  animation-delay: 1000ms;
+}
+
+.animation-delay-1500 {
+  animation-delay: 1500ms;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2000ms;
+}
+
+.animation-delay-2500 {
+  animation-delay: 2500ms;
+}
+
+.animation-delay-3000 {
+  animation-delay: 3000ms;
+}
+
+/* Floating Animation */
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Glitch Text Effect */
+.glitch-text {
+  animation: glitch 3s infinite;
+  position: relative;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.glitch-text::before {
+  animation: glitch 3s infinite;
+  color: #ff00ff;
+  z-index: -1;
+  clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+}
+
+.glitch-text::after {
+  animation: glitch 3s infinite reverse;
+  color: #00ffff;
+  z-index: -2;
+  clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+}
+
+/* Holographic Background */
+.holographic-bg {
+  background: linear-gradient(
+    45deg,
+    #00f0ff,
+    #ff00ff,
+    #00ff66,
+    #ffff00,
+    #ff0040,
+    #00f0ff
+  );
+  background-size: 400% 400%;
+  animation: holographic 8s ease infinite;
+}
+
+/* Data Stream Effect */
+.data-stream {
+  position: relative;
+  overflow: hidden;
+}
+
+.data-stream::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 240, 255, 0.4),
+    transparent
+  );
+  animation: data-flow 2s infinite;
+}
+
+@keyframes data-flow {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Circuit Board Pattern */
+.circuit-pattern {
+  background-image: 
+    radial-gradient(circle at 25% 25%, #00f0ff 2px, transparent 2px),
+    radial-gradient(circle at 75% 75%, #ff00ff 2px, transparent 2px),
+    linear-gradient(45deg, transparent 49%, rgba(0, 240, 255, 0.1) 50%, transparent 51%),
+    linear-gradient(-45deg, transparent 49%, rgba(255, 0, 255, 0.1) 50%, transparent 51%);
+  background-size: 40px 40px, 40px 40px, 20px 20px, 20px 20px;
+  background-position: 0 0, 20px 20px, 0 0, 0 0;
+}
+
+/* Hexagon Grid Pattern */
+.hex-grid {
+  background-image: 
+    radial-gradient(ellipse at center, rgba(0, 240, 255, 0.1) 1px, transparent 1px);
+  background-size: 30px 30px;
+  background-position: 0 0, 15px 15px;
+}
+
+/* Energy Pulse Effect */
+@keyframes energy-pulse {
+  0%, 100% {
+    box-shadow: 0 0 5px currentColor;
+    opacity: 1;
+  }
+  50% {
+    box-shadow: 0 0 20px currentColor, 0 0 30px currentColor;
+    opacity: 0.8;
+  }
+}
+
+.energy-pulse {
+  animation: energy-pulse 2s ease-in-out infinite;
+}
+
+/* Terminal Cursor Blink */
+@keyframes cursor-blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
+}
+
+.terminal-cursor {
+  animation: cursor-blink 1s infinite;
+}
+
+/* Matrix Rain Effect */
+.matrix-rain {
+  position: relative;
+  overflow: hidden;
+}
+
+.matrix-rain::after {
+  content: '0 1 0 1 1 0 0 1 1 0 1 0 1 0 0 1 0 1 1 0 0 1 0 1 1 0 1 0 0 1 1 0';
+  position: absolute;
+  top: -100%;
+  left: 0;
+  right: 0;
+  color: #00ff41;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  line-height: 1.2;
+  white-space: pre-wrap;
+  animation: matrix-fall 10s linear infinite;
+  opacity: 0.3;
+}
+
+@keyframes matrix-fall {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100vh);
+  }
+}

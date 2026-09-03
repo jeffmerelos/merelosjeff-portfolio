@@ -29,6 +29,11 @@ const testimonialsRouter = require('./routes/testimonials');
 const contactRouter = require('./routes/contact');
 const githubRouter = require('./routes/github');
 
+// Admin Routes
+const adminAuthRouter = require('./routes/admin-auth');
+const adminContentRouter = require('./routes/admin-content');
+const adminMessagesRouter = require('./routes/admin-messages');
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -72,6 +77,8 @@ app.use(
 );
 
 // ─── Body parsing ──────────────────────────────────────────────────────────
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
@@ -172,6 +179,11 @@ app.use('/api/certifications', certificationsRouter);
 app.use('/api/testimonials', testimonialsRouter);
 app.use('/api/contact', contactRouter);
 app.use('/api/github', githubRouter);
+
+// ─── Admin API Routes ──────────────────────────────────────────────────────
+app.use('/api/admin/auth', adminAuthRouter);
+app.use('/api/admin/content', adminContentRouter);
+app.use('/api/admin/messages', adminMessagesRouter);
 
 // ─── 404 & Error handling ──────────────────────────────────────────────────
 app.use(notFound);
