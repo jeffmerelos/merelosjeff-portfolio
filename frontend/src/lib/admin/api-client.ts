@@ -3,7 +3,33 @@
  * Handles all API calls to the admin backend with authentication, CSRF protection, and error handling
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+// Environment-aware API URL configuration
+const getApiBaseUrl = () => {
+  // Check for explicit environment variable first
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL;
+  }
+  
+  // Check if we're in production (Vercel environment)
+  if (process.env.NODE_ENV === 'production' || process.env.VERCEL === '1') {
+    return 'https://merelosjeff-portfolio-backend.vercel.app';
+  }
+  
+  // Default to local development
+  return 'http://localhost:5000';
+};
+
+const API_BASE_URL = getApiBaseUrl();
+
+// Debug: Log the API configuration (only in development)
+if (process.env.NODE_ENV === 'development') {
+  console.log('🔧 AdminApiClient Configuration:', {
+    API_BASE_URL,
+    NODE_ENV: process.env.NODE_ENV,
+    VERCEL: process.env.VERCEL,
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+  });
+}
 
 interface ApiResponse<T = any> {
   success: boolean;
@@ -24,7 +50,7 @@ class AdminApiClient {
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}/admin/auth/csrf`, {
+      const response = await fetch(`${API_BASE_URL}/api/admin/auth/csrf`, {
         credentials: 'include',
       });
 
@@ -50,7 +76,7 @@ class AdminApiClient {
     options: RequestInit = {}
   ): Promise<ApiResponse<T>> {
     try {
-      const url = `${API_BASE_URL}${endpoint}`;
+      const url = `${API_BASE_URL}/api${endpoint}`;
       
       const headers: HeadersInit = {
         'Content-Type': 'application/json',
