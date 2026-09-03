@@ -6,7 +6,7 @@ import { adminApi } from '@/lib/admin/api-client';
 import '../../../../styles/admin-cyberpunk.css';
 
 export default function ExperiencePage() {
-  const { addToast } = useToast();
+  const { showToast } = useToast();
   const [experiences, setExperiences] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
@@ -35,7 +35,7 @@ export default function ExperiencePage() {
       setLoading(false);
     } catch (error) {
       console.error('Error loading experiences:', error);
-      addToast('Failed to load experiences', 'error');
+      showToast({ message: 'Failed to load experiences', type: 'error' });
       setLoading(false);
     }
   };
@@ -61,15 +61,15 @@ export default function ExperiencePage() {
       }
 
       if (response.success) {
-        addToast(`Experience ${editingExperience ? 'updated' : 'created'} successfully`, 'success');
+        showToast({ message: `Experience ${editingExperience ? 'updated' : 'created'} successfully`, type: 'success' });
         loadExperiences();
         closeModal();
       } else {
-        addToast(response.error || 'Failed to save experience', 'error');
+        showToast({ message: response.error || 'Failed to save experience', type: 'error' });
       }
     } catch (error) {
       console.error('Error saving experience:', error);
-      addToast('Failed to save experience', 'error');
+      showToast({ message: 'Failed to save experience', type: 'error' });
     }
   };
 
@@ -79,14 +79,14 @@ export default function ExperiencePage() {
     try {
       const response = await adminApi.deleteExperience(id);
       if (response.success) {
-        addToast('Experience deleted successfully', 'success');
+        showToast({ message: 'Experience deleted successfully', type: 'success' });
         loadExperiences();
       } else {
-        addToast(response.error || 'Failed to delete experience', 'error');
+        showToast({ message: response.error || 'Failed to delete experience', type: 'error' });
       }
     } catch (error) {
       console.error('Error deleting experience:', error);
-      addToast('Failed to delete experience', 'error');
+      showToast({ message: 'Failed to delete experience', type: 'error' });
     }
   };
 
@@ -138,7 +138,7 @@ export default function ExperiencePage() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <Card title="Work Experience" neonBorder glowColor="yellow">
+      <Card title="Work Experience" neonBorder glowColor="cyan">
         <div className="flex justify-between items-center mb-6">
           <p className="text-cyber-text-muted font-tech">
             {experiences.length} experience{experiences.length !== 1 ? 's' : ''} total
@@ -329,3 +329,4 @@ export default function ExperiencePage() {
     </div>
   );
 }
+

@@ -6,7 +6,7 @@ import { adminApi } from '@/lib/admin/api-client';
 import '../../../../styles/admin-cyberpunk.css';
 
 export default function ProjectsPage() {
-  const { addToast } = useToast();
+  const { showToast } = useToast();
   const [projects, setProjects] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
@@ -37,7 +37,7 @@ export default function ProjectsPage() {
       setLoading(false);
     } catch (error) {
       console.error('Error loading projects:', error);
-      addToast('Failed to load projects', 'error');
+      showToast({ message: 'Failed to load projects', type: 'error' });
       setLoading(false);
     }
   };
@@ -60,15 +60,15 @@ export default function ProjectsPage() {
       }
 
       if (response.success) {
-        addToast(`Project ${editingProject ? 'updated' : 'created'} successfully`, 'success');
+        showToast({ message: `Project ${editingProject ? 'updated' : 'created'} successfully`, type: 'success' });
         loadProjects();
         closeModal();
       } else {
-        addToast(response.error || 'Failed to save project', 'error');
+        showToast({ message: response.error || 'Failed to save project', type: 'error' });
       }
     } catch (error) {
       console.error('Error saving project:', error);
-      addToast('Failed to save project', 'error');
+      showToast({ message: 'Failed to save project', type: 'error' });
     }
   };
 
@@ -78,14 +78,14 @@ export default function ProjectsPage() {
     try {
       const response = await adminApi.deleteProject(id);
       if (response.success) {
-        addToast('Project deleted successfully', 'success');
+        showToast({ message: 'Project deleted successfully', type: 'success' });
         loadProjects();
       } else {
-        addToast(response.error || 'Failed to delete project', 'error');
+        showToast({ message: response.error || 'Failed to delete project', type: 'error' });
       }
     } catch (error) {
       console.error('Error deleting project:', error);
-      addToast('Failed to delete project', 'error');
+      showToast({ message: 'Failed to delete project', type: 'error' });
     }
   };
 
@@ -402,3 +402,4 @@ export default function ProjectsPage() {
     </div>
   );
 }
+

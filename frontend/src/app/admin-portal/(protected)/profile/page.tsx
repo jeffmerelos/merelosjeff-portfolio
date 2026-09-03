@@ -6,7 +6,7 @@ import { adminApi } from '@/lib/admin/api-client';
 import '../../../../styles/admin-cyberpunk.css';
 
 export default function ProfilePage() {
-  const { addToast } = useToast();
+  const { showToast } = useToast();
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -50,7 +50,7 @@ export default function ProfilePage() {
       setLoading(false);
     } catch (error) {
       console.error('Error loading profile:', error);
-      addToast('Failed to load profile', 'error');
+      showToast({ message: 'Failed to load profile', type: 'error' });
       setLoading(false);
     }
   };
@@ -69,14 +69,14 @@ export default function ProfilePage() {
     try {
       const response = await adminApi.updateProfile(formData);
       if (response.success) {
-        addToast('Profile updated successfully', 'success');
+        showToast({ message: 'Profile updated successfully', type: 'success' });
         setProfile(response.data);
       } else {
-        addToast(response.error || 'Failed to update profile', 'error');
+        showToast({ message: response.error || 'Failed to update profile', type: 'error' });
       }
     } catch (error) {
       console.error('Error updating profile:', error);
-      addToast('Failed to update profile', 'error');
+      showToast({ message: 'Failed to update profile', type: 'error' });
     } finally {
       setSaving(false);
     }
@@ -253,3 +253,4 @@ export default function ProfilePage() {
     </div>
   );
 }
+

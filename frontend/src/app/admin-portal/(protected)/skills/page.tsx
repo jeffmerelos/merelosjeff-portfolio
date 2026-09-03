@@ -6,7 +6,7 @@ import { adminApi } from '@/lib/admin/api-client';
 import '../../../../styles/admin-cyberpunk.css';
 
 export default function SkillsPage() {
-  const { addToast } = useToast();
+  const { showToast } = useToast();
   const [skills, setSkills] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
@@ -31,7 +31,7 @@ export default function SkillsPage() {
       setLoading(false);
     } catch (error) {
       console.error('Error loading skills:', error);
-      addToast('Failed to load skills', 'error');
+      showToast({ message: 'Failed to load skills', type: 'error' });
       setLoading(false);
     }
   };
@@ -48,15 +48,15 @@ export default function SkillsPage() {
       }
 
       if (response.success) {
-        addToast(`Skill ${editingSkill ? 'updated' : 'created'} successfully`, 'success');
+        showToast({ message: `Skill ${editingSkill ? 'updated' : 'created'} successfully`, type: 'success' });
         loadSkills();
         closeModal();
       } else {
-        addToast(response.error || 'Failed to save skill', 'error');
+        showToast({ message: response.error || 'Failed to save skill', type: 'error' });
       }
     } catch (error) {
       console.error('Error saving skill:', error);
-      addToast('Failed to save skill', 'error');
+      showToast({ message: 'Failed to save skill', type: 'error' });
     }
   };
 
@@ -66,14 +66,14 @@ export default function SkillsPage() {
     try {
       const response = await adminApi.deleteSkill(id);
       if (response.success) {
-        addToast('Skill deleted successfully', 'success');
+        showToast({ message: 'Skill deleted successfully', type: 'success' });
         loadSkills();
       } else {
-        addToast(response.error || 'Failed to delete skill', 'error');
+        showToast({ message: response.error || 'Failed to delete skill', type: 'error' });
       }
     } catch (error) {
       console.error('Error deleting skill:', error);
-      addToast('Failed to delete skill', 'error');
+      showToast({ message: 'Failed to delete skill', type: 'error' });
     }
   };
 
@@ -122,14 +122,14 @@ export default function SkillsPage() {
       const orderedIds = skills.map((skill) => skill.id);
       const response = await adminApi.reorderSkills(orderedIds);
       if (!response.success) {
-        addToast('Failed to save new order', 'error');
+        showToast({ message: 'Failed to save new order', type: 'error' });
         loadSkills();
       } else {
-        addToast('Skills reordered successfully', 'success');
+        showToast({ message: 'Skills reordered successfully', type: 'success' });
       }
     } catch (error) {
       console.error('Error reordering skills:', error);
-      addToast('Failed to save new order', 'error');
+      showToast({ message: 'Failed to save new order', type: 'error' });
       loadSkills();
     }
 
@@ -293,3 +293,4 @@ export default function SkillsPage() {
     </div>
   );
 }
+

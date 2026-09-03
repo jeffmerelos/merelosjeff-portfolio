@@ -168,10 +168,9 @@ export default function DashboardPage() {
         {metricCards.map((metric, index) => (
           <Card
             key={metric.title}
-            className="backdrop-blur-sm hover:scale-105 transition-transform duration-300"
+            className={`backdrop-blur-sm hover:scale-105 transition-transform duration-300`}
             neonBorder
             glowColor={metric.color as any}
-            style={{ animationDelay: `${index * 100}ms` }}
           >
             <div className="flex items-start justify-between mb-4">
               <div className={`p-3 rounded-lg bg-cyber-${metric.color}/10 border border-cyber-${metric.color}/30`}>
@@ -306,3 +305,4 @@ export default function DashboardPage() {
     </div>
   );
 }
+

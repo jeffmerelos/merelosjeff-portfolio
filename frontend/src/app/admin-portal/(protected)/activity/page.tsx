@@ -26,7 +26,7 @@ export default function ActivityPage() {
 
   const loadEventTypes = async () => {
     try {
-      const response = await adminApi.getActivityEventTypes();
+      const response = await adminApi.getEventTypes();
       if (response.success) {
         setEventTypes(response.data?.eventTypes || []);
       }
@@ -302,3 +302,4 @@ export default function ActivityPage() {
     </div>
   );
 }
+

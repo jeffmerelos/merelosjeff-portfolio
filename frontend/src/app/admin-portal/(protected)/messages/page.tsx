@@ -6,7 +6,7 @@ import { adminApi } from '@/lib/admin/api-client';
 import '../../../../styles/admin-cyberpunk.css';
 
 export default function MessagesPage() {
-  const { addToast } = useToast();
+  const { showToast } = useToast();
   const [messages, setMessages] = useState<any[]>([]);
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -36,7 +36,7 @@ export default function MessagesPage() {
       setLoading(false);
     } catch (error) {
       console.error('Error loading messages:', error);
-      addToast('Failed to load messages', 'error');
+      showToast({ message: 'Failed to load messages', type: 'error' });
       setLoading(false);
     }
   };
@@ -79,23 +79,23 @@ export default function MessagesPage() {
 
   const handleBulkAction = async (action: string) => {
     if (selectedMessages.length === 0) {
-      addToast('No messages selected', 'warning');
+      showToast({ message: 'No messages selected', type: 'warning' });
       return;
     }
 
     try {
-      const response = await adminApi.bulkMessageAction(selectedMessages, action);
+      const response = await adminApi.bulkMessageAction(action, selectedMessages);
       if (response.success) {
-        addToast(`Bulk ${action} completed`, 'success');
+        showToast({ message: `Bulk ${action} completed`, type: 'success' });
         setSelectedMessages([]);
         loadMessages();
         loadStats();
       } else {
-        addToast(response.error || 'Bulk action failed', 'error');
+        showToast({ message: response.error || 'Bulk action failed', type: 'error' });
       }
     } catch (error) {
       console.error('Error performing bulk action:', error);
-      addToast('Bulk action failed', 'error');
+      showToast({ message: 'Bulk action failed', type: 'error' });
     }
   };
 
@@ -105,37 +105,26 @@ export default function MessagesPage() {
     try {
       const response = await adminApi.deleteMessage(id);
       if (response.success) {
-        addToast('Message deleted successfully', 'success');
+        showToast({ message: 'Message deleted successfully', type: 'success' });
         loadMessages();
         loadStats();
         setViewModalOpen(false);
       } else {
-        addToast(response.error || 'Failed to delete message', 'error');
+        showToast({ message: response.error || 'Failed to delete message', type: 'error' });
       }
     } catch (error) {
       console.error('Error deleting message:', error);
-      addToast('Failed to delete message', 'error');
+      showToast({ message: 'Failed to delete message', type: 'error' });
     }
   };
 
   const handleExportCSV = async () => {
     try {
-      const response = await adminApi.exportMessagesCSV();
-      if (response.success && response.data?.csv) {
-        const blob = new Blob([response.data.csv], { type: 'text/csv' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `messages-${new Date().toISOString().split('T')[0]}.csv`;
-        a.click();
-        window.URL.revokeObjectURL(url);
-        addToast('CSV exported successfully', 'success');
-      } else {
-        addToast('Failed to export CSV', 'error');
-      }
+      adminApi.exportMessages();
+      showToast({ message: 'CSV export initiated', type: 'success' });
     } catch (error) {
       console.error('Error exporting CSV:', error);
-      addToast('Failed to export CSV', 'error');
+      showToast({ message: 'Failed to export CSV', type: 'error' });
     }
   };
 
@@ -176,7 +165,7 @@ export default function MessagesPage() {
           </div>
         </Card>
 
-        <Card neonBorder glowColor="yellow">
+        <Card neonBorder glowColor="green">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-cyber-text-dim font-tech">Unread</p>
@@ -387,7 +376,7 @@ export default function MessagesPage() {
                 Delete
               </Button>
               <div className="flex-1" />
-              <Button variant="default" onClick={() => setViewModalOpen(false)}>
+              <Button variant="cyan" onClick={() => setViewModalOpen(false)}>
                 Close
               </Button>
             </div>
@@ -397,3 +386,4 @@ export default function MessagesPage() {
     </div>
   );
 }
+

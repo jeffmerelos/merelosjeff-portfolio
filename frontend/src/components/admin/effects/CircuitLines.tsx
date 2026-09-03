@@ -36,22 +36,22 @@ export default function CircuitLines({
 
     // Circuit line class
     class CircuitLine {
-      x: number;
-      y: number;
-      targetX: number;
-      targetY: number;
-      color: string;
-      progress: number;
-      segments: { x: number; y: number }[];
-      direction: 'horizontal' | 'vertical';
+      x!: number;
+      y!: number;
+      targetX!: number;
+      targetY!: number;
+      color!: string;
+      progress!: number;
+      segments!: { x: number; y: number }[];
+      direction!: 'horizontal' | 'vertical';
 
       constructor() {
         this.reset();
       }
 
       reset() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
+        this.x = Math.random() * canvas!.width;
+        this.y = Math.random() * canvas!.height;
         this.color = colors[Math.floor(Math.random() * colors.length)];
         this.progress = 0;
         this.direction = Math.random() > 0.5 ? 'horizontal' : 'vertical';
@@ -74,8 +74,8 @@ export default function CircuitLines({
             currentX += Math.random() > 0.7 ? (Math.random() - 0.5) * 100 : 0;
           }
           
-          currentX = Math.max(0, Math.min(canvas.width, currentX));
-          currentY = Math.max(0, Math.min(canvas.height, currentY));
+          currentX = Math.max(0, Math.min(canvas!.width, currentX));
+          currentY = Math.max(0, Math.min(canvas!.height, currentY));
           
           this.segments.push({ x: currentX, y: currentY });
         }
@@ -95,17 +95,17 @@ export default function CircuitLines({
         const currentSegment = Math.floor(segmentProgress);
         const segmentFraction = segmentProgress - currentSegment;
 
-        ctx.strokeStyle = this.color;
-        ctx.lineWidth = 1;
-        ctx.globalAlpha = 0.6;
-        ctx.beginPath();
+        ctx!.strokeStyle = this.color;
+        ctx!.lineWidth = 1;
+        ctx!.globalAlpha = 0.6;
+        ctx!.beginPath();
 
         // Draw completed segments
         for (let i = 0; i < currentSegment && i < this.segments.length - 1; i++) {
           if (i === 0) {
-            ctx.moveTo(this.segments[i].x, this.segments[i].y);
+            ctx!.moveTo(this.segments[i].x, this.segments[i].y);
           }
-          ctx.lineTo(this.segments[i + 1].x, this.segments[i + 1].y);
+          ctx!.lineTo(this.segments[i + 1].x, this.segments[i + 1].y);
         }
 
         // Draw current segment in progress
@@ -116,23 +116,23 @@ export default function CircuitLines({
           const currentY = start.y + (end.y - start.y) * segmentFraction;
           
           if (currentSegment === 0) {
-            ctx.moveTo(start.x, start.y);
+            ctx!.moveTo(start.x, start.y);
           }
-          ctx.lineTo(currentX, currentY);
+          ctx!.lineTo(currentX, currentY);
         }
 
-        ctx.stroke();
+        ctx!.stroke();
 
         // Draw circuit nodes
         for (let i = 0; i <= currentSegment && i < this.segments.length; i++) {
-          ctx.fillStyle = this.color;
-          ctx.globalAlpha = 0.8;
-          ctx.beginPath();
-          ctx.arc(this.segments[i].x, this.segments[i].y, 2, 0, Math.PI * 2);
-          ctx.fill();
+          ctx!.fillStyle = this.color;
+          ctx!.globalAlpha = 0.8;
+          ctx!.beginPath();
+          ctx!.arc(this.segments[i].x, this.segments[i].y, 2, 0, Math.PI * 2);
+          ctx!.fill();
         }
 
-        ctx.globalAlpha = 1;
+        ctx!.globalAlpha = 1;
       }
     }
 
@@ -144,7 +144,7 @@ export default function CircuitLines({
 
     // Animation loop
     const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx!.clearRect(0, 0, canvas!.width, canvas!.height);
 
       lines.forEach((line) => {
         line.update();

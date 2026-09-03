@@ -6,7 +6,7 @@ import { adminApi } from '@/lib/admin/api-client';
 import '../../../../styles/admin-cyberpunk.css';
 
 export default function SettingsPage() {
-  const { addToast } = useToast();
+  const { showToast } = useToast();
   const [user, setUser] = useState<any>(null);
   const [sessions, setSessions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -58,31 +58,32 @@ export default function SettingsPage() {
     e.preventDefault();
 
     if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-      addToast('Passwords do not match', 'error');
+      showToast({ message: 'Passwords do not match', type: 'error' });
       return;
     }
 
     if (passwordForm.newPassword.length < 8) {
-      addToast('Password must be at least 8 characters', 'error');
+      showToast({ message: 'Password must be at least 8 characters', type: 'error' });
       return;
     }
 
     try {
       const response = await adminApi.changePassword(
         passwordForm.currentPassword,
-        passwordForm.newPassword
+        passwordForm.newPassword,
+        passwordForm.confirmPassword
       );
 
       if (response.success) {
-        addToast('Password changed successfully', 'success');
+        showToast({ message: 'Password changed successfully', type: 'success' });
         setPasswordModalOpen(false);
         setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
       } else {
-        addToast(response.error || 'Failed to change password', 'error');
+        showToast({ message: response.error || 'Failed to change password', type: 'error' });
       }
     } catch (error) {
       console.error('Error changing password:', error);
-      addToast('Failed to change password', 'error');
+      showToast({ message: 'Failed to change password', type: 'error' });
     }
   };
 
@@ -93,11 +94,11 @@ export default function SettingsPage() {
         setQrCode(response.data.qrCode);
         setTwoFactorModalOpen(true);
       } else {
-        addToast('Failed to setup 2FA', 'error');
+        showToast({ message: 'Failed to setup 2FA', type: 'error' });
       }
     } catch (error) {
       console.error('Error setting up 2FA:', error);
-      addToast('Failed to setup 2FA', 'error');
+      showToast({ message: 'Failed to setup 2FA', type: 'error' });
     }
   };
 
@@ -108,53 +109,63 @@ export default function SettingsPage() {
       const response = await adminApi.enable2FA(totpForm.token);
       if (response.success && response.data) {
         setBackupCodes(response.data.backupCodes || []);
-        addToast('2FA enabled successfully', 'success');
+        showToast({ message: '2FA enabled successfully', type: 'success' });
         setTotpForm({ token: '' });
         loadUserData();
       } else {
-        addToast(response.error || 'Failed to enable 2FA', 'error');
+        showToast({ message: response.error || 'Failed to enable 2FA', type: 'error' });
       }
     } catch (error) {
       console.error('Error enabling 2FA:', error);
-      addToast('Failed to enable 2FA', 'error');
+      showToast({ message: 'Failed to enable 2FA', type: 'error' });
     }
   };
 
   const handleDisable2FA = async () => {
+    const password = prompt('Enter your current password to disable 2FA:');
+    if (!password) {
+      return;
+    }
+
     if (!confirm('Are you sure you want to disable 2FA? This will make your account less secure.')) {
       return;
     }
 
     try {
-      const response = await adminApi.disable2FA();
+      const response = await adminApi.disable2FA(password);
       if (response.success) {
-        addToast('2FA disabled successfully', 'success');
+        showToast({ message: '2FA disabled successfully', type: 'success' });
         loadUserData();
       } else {
-        addToast(response.error || 'Failed to disable 2FA', 'error');
+        showToast({ message: response.error || 'Failed to disable 2FA', type: 'error' });
       }
     } catch (error) {
       console.error('Error disabling 2FA:', error);
-      addToast('Failed to disable 2FA', 'error');
+      showToast({ message: 'Failed to disable 2FA', type: 'error' });
     }
   };
 
   const handleRegenerateBackupCodes = async () => {
+    const password = prompt('Enter your current password to regenerate backup codes:');
+    if (!password) {
+      return;
+    }
+
     if (!confirm('This will invalidate your current backup codes. Continue?')) {
       return;
     }
 
     try {
-      const response = await adminApi.regenerateBackupCodes();
+      const response = await adminApi.regenerateBackupCodes(password);
       if (response.success && response.data) {
         setBackupCodes(response.data.backupCodes || []);
-        addToast('Backup codes regenerated', 'success');
+        showToast({ message: 'Backup codes regenerated', type: 'success' });
       } else {
-        addToast('Failed to regenerate backup codes', 'error');
+        showToast({ message: 'Failed to regenerate backup codes', type: 'error' });
       }
     } catch (error) {
       console.error('Error regenerating backup codes:', error);
-      addToast('Failed to regenerate backup codes', 'error');
+      showToast({ message: 'Failed to regenerate backup codes', type: 'error' });
     }
   };
 
@@ -164,16 +175,16 @@ export default function SettingsPage() {
     }
 
     try {
-      const response = await adminApi.deleteSession(sessionId);
+      const response = await adminApi.terminateSession(sessionId);
       if (response.success) {
-        addToast('Session terminated', 'success');
+        showToast({ message: 'Session terminated', type: 'success' });
         loadSessions();
       } else {
-        addToast('Failed to terminate session', 'error');
+        showToast({ message: 'Failed to terminate session', type: 'error' });
       }
     } catch (error) {
       console.error('Error terminating session:', error);
-      addToast('Failed to terminate session', 'error');
+      showToast({ message: 'Failed to terminate session', type: 'error' });
     }
   };
 
@@ -187,11 +198,11 @@ export default function SettingsPage() {
       if (response.success) {
         window.location.href = '/admin-portal-7x9k/login';
       } else {
-        addToast('Failed to logout from all devices', 'error');
+        showToast({ message: 'Failed to logout from all devices', type: 'error' });
       }
     } catch (error) {
       console.error('Error logging out:', error);
-      addToast('Failed to logout from all devices', 'error');
+      showToast({ message: 'Failed to logout from all devices', type: 'error' });
     }
   };
 
@@ -294,7 +305,7 @@ export default function SettingsPage() {
                 className="mt-3"
                 onClick={() => {
                   navigator.clipboard.writeText(backupCodes.join('\n'));
-                  addToast('Backup codes copied to clipboard', 'success');
+                  showToast({ message: 'Backup codes copied to clipboard', type: 'success' });
                 }}
               >
                 Copy to Clipboard
@@ -506,3 +517,4 @@ export default function SettingsPage() {
     </div>
   );
 }
+

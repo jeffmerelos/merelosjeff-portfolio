@@ -20,7 +20,7 @@ class AdminApiClient {
    */
   async getCsrfToken(): Promise<string> {
     if (this.csrfToken) {
-      return this.csrfToken;
+      return this.csrfToken!;
     }
 
     try {
@@ -32,7 +32,7 @@ class AdminApiClient {
       
       if (data.success && data.csrfToken) {
         this.csrfToken = data.csrfToken;
-        return this.csrfToken;
+        return this.csrfToken!;
       }
 
       throw new Error('Failed to get CSRF token');
@@ -60,7 +60,7 @@ class AdminApiClient {
       // Add CSRF token for state-changing requests
       if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(options.method || 'GET')) {
         const csrfToken = await this.getCsrfToken();
-        headers['x-csrf-token'] = csrfToken;
+        (headers as any)['x-csrf-token'] = csrfToken;
       }
 
       const response = await fetch(url, {

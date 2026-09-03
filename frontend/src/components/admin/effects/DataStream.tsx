@@ -23,35 +23,35 @@ export default function DataStream({
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas!.getContext('2d');
     if (!ctx) return;
 
     let animationFrameId: number;
 
     // Set up canvas
     const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      canvas!.width = window.innerWidth;
+      canvas!.height = window.innerHeight;
     };
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
     // Data stream class
     class DataStreamLine {
-      x: number;
-      y: number;
-      speed: number;
-      color: string;
-      text: string;
-      opacity: number;
-      width: number;
+      x!: number;
+      y!: number;
+      speed!: number;
+      color!: string;
+      text!: string;
+      opacity!: number;
+      width!: number;
 
       constructor() {
         this.reset();
       }
 
       reset() {
-        this.x = Math.random() * canvas.width;
+        this.x = Math.random() * canvas!.width;
         this.y = -50;
         this.speed = speed * (0.5 + Math.random() * 1.5);
         this.color = colors[Math.floor(Math.random() * colors.length)];
@@ -70,55 +70,55 @@ export default function DataStream({
 
       update() {
         this.y += this.speed;
-        if (this.y > canvas.height + 50) {
+        if (this.y > canvas!.height + 50) {
           this.reset();
         }
       }
 
       draw() {
         // Draw main stream line
-        ctx.strokeStyle = this.color;
-        ctx.lineWidth = 2;
-        ctx.globalAlpha = this.opacity;
+        ctx!.strokeStyle = this.color;
+        ctx!.lineWidth = 2;
+        ctx!.globalAlpha = this.opacity;
         
-        ctx.beginPath();
-        ctx.moveTo(this.x, this.y - this.width);
-        ctx.lineTo(this.x, this.y);
-        ctx.stroke();
+        ctx!.beginPath();
+        ctx!.moveTo(this.x, this.y - this.width);
+        ctx!.lineTo(this.x, this.y);
+        ctx!.stroke();
 
         // Draw data text along the line
-        ctx.fillStyle = this.color;
-        ctx.font = '10px "Share Tech Mono", monospace';
-        ctx.globalAlpha = this.opacity * 0.8;
+        ctx!.fillStyle = this.color;
+        ctx!.font = '10px "Share Tech Mono", monospace';
+        ctx!.globalAlpha = this.opacity * 0.8;
         
         const textY = this.y - this.width / 2;
-        ctx.save();
-        ctx.translate(this.x + 5, textY);
-        ctx.rotate(-Math.PI / 2);
-        ctx.fillText(this.text, 0, 0);
-        ctx.restore();
+        ctx!.save();
+        ctx!.translate(this.x + 5, textY);
+        ctx!.rotate(-Math.PI / 2);
+        ctx!.fillText(this.text, 0, 0);
+        ctx!.restore();
 
         // Draw stream head glow
-        ctx.fillStyle = this.color;
-        ctx.globalAlpha = this.opacity;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
-        ctx.fill();
+        ctx!.fillStyle = this.color;
+        ctx!.globalAlpha = this.opacity;
+        ctx!.beginPath();
+        ctx!.arc(this.x, this.y, 3, 0, Math.PI * 2);
+        ctx!.fill();
 
         // Draw stream tail fade
-        const gradient = ctx.createLinearGradient(this.x, this.y - this.width, this.x, this.y);
+        const gradient = ctx!.createLinearGradient(this.x, this.y - this.width, this.x, this.y);
         gradient.addColorStop(0, `${this.color}00`);
         gradient.addColorStop(1, this.color);
         
-        ctx.strokeStyle = gradient;
-        ctx.lineWidth = 1;
-        ctx.globalAlpha = this.opacity * 0.5;
-        ctx.beginPath();
-        ctx.moveTo(this.x, this.y - this.width);
-        ctx.lineTo(this.x, this.y);
-        ctx.stroke();
+        ctx!.strokeStyle = gradient;
+        ctx!.lineWidth = 1;
+        ctx!.globalAlpha = this.opacity * 0.5;
+        ctx!.beginPath();
+        ctx!.moveTo(this.x, this.y - this.width);
+        ctx!.lineTo(this.x, this.y);
+        ctx!.stroke();
 
-        ctx.globalAlpha = 1;
+        ctx!.globalAlpha = 1;
       }
     }
 
@@ -126,13 +126,13 @@ export default function DataStream({
     const streams: DataStreamLine[] = [];
     for (let i = 0; i < streamCount; i++) {
       const stream = new DataStreamLine();
-      stream.y = Math.random() * canvas.height; // Start at random positions
+      stream.y = Math.random() * canvas!.height; // Start at random positions
       streams.push(stream);
     }
 
     // Animation loop
     const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx!.clearRect(0, 0, canvas!.width, canvas!.height);
 
       streams.forEach((stream) => {
         stream.update();

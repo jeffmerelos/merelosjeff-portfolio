@@ -6,7 +6,7 @@ import { adminApi } from '@/lib/admin/api-client';
 import '../../../../styles/admin-cyberpunk.css';
 
 export default function CertificationsPage() {
-  const { addToast } = useToast();
+  const { showToast } = useToast();
   const [certifications, setCertifications] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
@@ -33,7 +33,7 @@ export default function CertificationsPage() {
       setLoading(false);
     } catch (error) {
       console.error('Error loading certifications:', error);
-      addToast('Failed to load certifications', 'error');
+      showToast({ message: 'Failed to load certifications', type: 'error' });
       setLoading(false);
     }
   };
@@ -50,18 +50,18 @@ export default function CertificationsPage() {
       }
 
       if (response.success) {
-        addToast(
-          `Certification ${editingCertification ? 'updated' : 'created'} successfully`,
-          'success'
-        );
+        showToast({
+          message: `Certification ${editingCertification ? 'updated' : 'created'} successfully`,
+          type: 'success'
+        });
         loadCertifications();
         closeModal();
       } else {
-        addToast(response.error || 'Failed to save certification', 'error');
+        showToast({ message: response.error || 'Failed to save certification', type: 'error' });
       }
     } catch (error) {
       console.error('Error saving certification:', error);
-      addToast('Failed to save certification', 'error');
+      showToast({ message: 'Failed to save certification', type: 'error' });
     }
   };
 
@@ -71,14 +71,14 @@ export default function CertificationsPage() {
     try {
       const response = await adminApi.deleteCertification(id);
       if (response.success) {
-        addToast('Certification deleted successfully', 'success');
+        showToast({ message: 'Certification deleted successfully', type: 'success' });
         loadCertifications();
       } else {
-        addToast(response.error || 'Failed to delete certification', 'error');
+        showToast({ message: response.error || 'Failed to delete certification', type: 'error' });
       }
     } catch (error) {
       console.error('Error deleting certification:', error);
-      addToast('Failed to delete certification', 'error');
+      showToast({ message: 'Failed to delete certification', type: 'error' });
     }
   };
 
@@ -314,3 +314,4 @@ export default function CertificationsPage() {
     </div>
   );
 }
+

@@ -277,3 +277,4 @@ export default function ProtectedLayout({ children }: LayoutProps) {
     </div>
   );
 }
+
