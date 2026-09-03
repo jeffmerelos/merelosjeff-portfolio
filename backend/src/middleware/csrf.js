@@ -3,7 +3,7 @@ const { doubleCsrf } = require('csrf-csrf');
 // CSRF protection configuration
 const {
   invalidCsrfTokenError,
-  generateToken,
+  generateCsrfToken,
   doubleCsrfProtection,
 } = doubleCsrf({
   getSecret: () => process.env.CSRF_SECRET || 'your-csrf-secret-change-this-in-production',
@@ -19,6 +19,10 @@ const {
   getTokenFromRequest: (req) => {
     // Check header first, then body
     return req.headers['x-csrf-token'] || req.body?.csrfToken;
+  },
+  getSessionIdentifier: (req) => {
+    // Use session ID if available, otherwise use a default
+    return req.session?.id || 'anonymous';
   }
 });
 
@@ -26,7 +30,7 @@ const {
  * Middleware to generate and send CSRF token
  */
 function sendCsrfToken(req, res, next) {
-  const token = generateToken(req, res);
+  const token = generateCsrfToken(req, res);
   res.locals.csrfToken = token;
   next();
 }
@@ -48,5 +52,5 @@ module.exports = {
   csrfProtection: doubleCsrfProtection,
   sendCsrfToken,
   csrfErrorHandler,
-  generateToken
+  generateToken: generateCsrfToken
 };

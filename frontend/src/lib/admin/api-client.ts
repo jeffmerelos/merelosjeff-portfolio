@@ -24,7 +24,7 @@ class AdminApiClient {
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/admin/auth/csrf`, {
+      const response = await fetch(`${API_BASE_URL}/admin/auth/csrf`, {
         credentials: 'include',
       });
 
@@ -96,58 +96,58 @@ class AdminApiClient {
   // ============================================
 
   async login(username: string, password: string) {
-    return this.request('/api/admin/auth/login', {
+    return this.request('/admin/auth/login', {
       method: 'POST',
       body: JSON.stringify({ username, password }),
     });
   }
 
   async verify2FA(userId: string, code: string) {
-    return this.request('/api/admin/auth/verify-2fa', {
+    return this.request('/admin/auth/verify-2fa', {
       method: 'POST',
       body: JSON.stringify({ userId, code }),
     });
   }
 
   async verifyBackupCode(userId: string, code: string) {
-    return this.request('/api/admin/auth/verify-backup-code', {
+    return this.request('/admin/auth/verify-backup-code', {
       method: 'POST',
       body: JSON.stringify({ userId, code }),
     });
   }
 
   async logout() {
-    return this.request('/api/admin/auth/logout', {
+    return this.request('/admin/auth/logout', {
       method: 'POST',
     });
   }
 
   async logoutAll() {
-    return this.request('/api/admin/auth/logout-all', {
+    return this.request('/admin/auth/logout-all', {
       method: 'POST',
     });
   }
 
   async getCurrentUser() {
-    return this.request('/api/admin/auth/me');
+    return this.request('/admin/auth/me');
   }
 
   async getSessions() {
-    return this.request('/api/admin/auth/sessions');
+    return this.request('/admin/auth/sessions');
   }
 
   async terminateSession(sessionId: string) {
-    return this.request(`/api/admin/auth/sessions/${sessionId}`, {
+    return this.request(`/admin/auth/sessions/${sessionId}`, {
       method: 'DELETE',
     });
   }
 
   async getLoginAttempts(limit = 10) {
-    return this.request(`/api/admin/auth/login-attempts?limit=${limit}`);
+    return this.request(`/admin/auth/login-attempts?limit=${limit}`);
   }
 
   async changePassword(currentPassword: string, newPassword: string, confirmPassword: string) {
-    return this.request('/api/admin/auth/change-password', {
+    return this.request('/admin/auth/change-password', {
       method: 'POST',
       body: JSON.stringify({ currentPassword, newPassword, confirmPassword }),
     });
@@ -155,27 +155,27 @@ class AdminApiClient {
 
   // 2FA Management
   async setup2FA() {
-    return this.request('/api/admin/auth/2fa/setup', {
+    return this.request('/admin/auth/2fa/setup', {
       method: 'POST',
     });
   }
 
   async enable2FA(code: string) {
-    return this.request('/api/admin/auth/2fa/enable', {
+    return this.request('/admin/auth/2fa/enable', {
       method: 'POST',
       body: JSON.stringify({ code }),
     });
   }
 
   async disable2FA(password: string) {
-    return this.request('/api/admin/auth/2fa/disable', {
+    return this.request('/admin/auth/2fa/disable', {
       method: 'POST',
       body: JSON.stringify({ password }),
     });
   }
 
   async regenerateBackupCodes(password: string) {
-    return this.request('/api/admin/auth/2fa/regenerate-backup-codes', {
+    return this.request('/admin/auth/2fa/regenerate-backup-codes', {
       method: 'POST',
       body: JSON.stringify({ password }),
     });
@@ -187,11 +187,11 @@ class AdminApiClient {
 
   // Profile
   async getProfile() {
-    return this.request('/api/admin/content/profile');
+    return this.request('/admin/content/profile');
   }
 
   async updateProfile(data: any) {
-    return this.request('/api/admin/content/profile', {
+    return this.request('/admin/content/profile', {
       method: 'PUT',
       body: JSON.stringify(data),
     });
@@ -203,31 +203,31 @@ class AdminApiClient {
     if (filters?.category) params.append('category', filters.category);
     if (filters?.featured !== undefined) params.append('featured', String(filters.featured));
     
-    return this.request(`/api/admin/content/skills?${params.toString()}`);
+    return this.request(`/admin/content/skills?${params.toString()}`);
   }
 
   async createSkill(data: any) {
-    return this.request('/api/admin/content/skills', {
+    return this.request('/admin/content/skills', {
       method: 'POST',
       body: JSON.stringify(data),
     });
   }
 
   async updateSkill(id: number, data: any) {
-    return this.request(`/api/admin/content/skills/${id}`, {
+    return this.request(`/admin/content/skills/${id}`, {
       method: 'PUT',
       body: JSON.stringify(data),
     });
   }
 
   async deleteSkill(id: number) {
-    return this.request(`/api/admin/content/skills/${id}`, {
+    return this.request(`/admin/content/skills/${id}`, {
       method: 'DELETE',
     });
   }
 
   async reorderSkills(skillOrders: Array<{ id: number; sort_order: number }>) {
-    return this.request('/api/admin/content/reorder/skills', {
+    return this.request('/admin/content/reorder/skills', {
       method: 'PUT',
       body: JSON.stringify({ skillOrders }),
     });
@@ -240,35 +240,35 @@ class AdminApiClient {
     if (filters?.status) params.append('status', filters.status);
     if (filters?.featured !== undefined) params.append('featured', String(filters.featured));
     
-    return this.request(`/api/admin/content/projects?${params.toString()}`);
+    return this.request(`/admin/content/projects?${params.toString()}`);
   }
 
   async getProject(slug: string) {
-    return this.request(`/api/admin/content/projects/${slug}`);
+    return this.request(`/admin/content/projects/${slug}`);
   }
 
   async createProject(data: any) {
-    return this.request('/api/admin/content/projects', {
+    return this.request('/admin/content/projects', {
       method: 'POST',
       body: JSON.stringify(data),
     });
   }
 
   async updateProject(id: number, data: any) {
-    return this.request(`/api/admin/content/projects/${id}`, {
+    return this.request(`/admin/content/projects/${id}`, {
       method: 'PUT',
       body: JSON.stringify(data),
     });
   }
 
   async deleteProject(id: number) {
-    return this.request(`/api/admin/content/projects/${id}`, {
+    return this.request(`/admin/content/projects/${id}`, {
       method: 'DELETE',
     });
   }
 
   async reorderProjects(projectOrders: Array<{ id: number; sort_order: number }>) {
-    return this.request('/api/admin/content/reorder/projects', {
+    return this.request('/admin/content/reorder/projects', {
       method: 'PUT',
       body: JSON.stringify({ projectOrders }),
     });
@@ -277,50 +277,50 @@ class AdminApiClient {
   // Experience
   async getExperience(type?: string) {
     const params = type ? `?type=${type}` : '';
-    return this.request(`/api/admin/content/experience${params}`);
+    return this.request(`/admin/content/experience${params}`);
   }
 
   async createExperience(data: any) {
-    return this.request('/api/admin/content/experience', {
+    return this.request('/admin/content/experience', {
       method: 'POST',
       body: JSON.stringify(data),
     });
   }
 
   async updateExperience(id: number, data: any) {
-    return this.request(`/api/admin/content/experience/${id}`, {
+    return this.request(`/admin/content/experience/${id}`, {
       method: 'PUT',
       body: JSON.stringify(data),
     });
   }
 
   async deleteExperience(id: number) {
-    return this.request(`/api/admin/content/experience/${id}`, {
+    return this.request(`/admin/content/experience/${id}`, {
       method: 'DELETE',
     });
   }
 
   // Certifications
   async getCertifications() {
-    return this.request('/api/admin/content/certifications');
+    return this.request('/admin/content/certifications');
   }
 
   async createCertification(data: any) {
-    return this.request('/api/admin/content/certifications', {
+    return this.request('/admin/content/certifications', {
       method: 'POST',
       body: JSON.stringify(data),
     });
   }
 
   async updateCertification(id: number, data: any) {
-    return this.request(`/api/admin/content/certifications/${id}`, {
+    return this.request(`/admin/content/certifications/${id}`, {
       method: 'PUT',
       body: JSON.stringify(data),
     });
   }
 
   async deleteCertification(id: number) {
-    return this.request(`/api/admin/content/certifications/${id}`, {
+    return this.request(`/admin/content/certifications/${id}`, {
       method: 'DELETE',
     });
   }
@@ -345,49 +345,49 @@ class AdminApiClient {
     if (filters?.limit) params.append('limit', String(filters.limit));
     if (filters?.offset) params.append('offset', String(filters.offset));
     
-    return this.request(`/api/admin/messages?${params.toString()}`);
+    return this.request(`/admin/messages?${params.toString()}`);
   }
 
   async getMessageStats() {
-    return this.request('/api/admin/messages/stats');
+    return this.request('/admin/messages/stats');
   }
 
   async getMessage(id: number) {
-    return this.request(`/api/admin/messages/${id}`);
+    return this.request(`/admin/messages/${id}`);
   }
 
   async markMessageAsRead(id: number) {
-    return this.request(`/api/admin/messages/${id}/read`, {
+    return this.request(`/admin/messages/${id}/read`, {
       method: 'PUT',
     });
   }
 
   async markMessageAsUnread(id: number) {
-    return this.request(`/api/admin/messages/${id}/unread`, {
+    return this.request(`/admin/messages/${id}/unread`, {
       method: 'PUT',
     });
   }
 
   async archiveMessage(id: number) {
-    return this.request(`/api/admin/messages/${id}/archive`, {
+    return this.request(`/admin/messages/${id}/archive`, {
       method: 'PUT',
     });
   }
 
   async unarchiveMessage(id: number) {
-    return this.request(`/api/admin/messages/${id}/unarchive`, {
+    return this.request(`/admin/messages/${id}/unarchive`, {
       method: 'PUT',
     });
   }
 
   async deleteMessage(id: number) {
-    return this.request(`/api/admin/messages/${id}`, {
+    return this.request(`/admin/messages/${id}`, {
       method: 'DELETE',
     });
   }
 
   async bulkMessageAction(action: string, messageIds: number[]) {
-    return this.request('/api/admin/messages/bulk-actions', {
+    return this.request('/admin/messages/bulk-actions', {
       method: 'POST',
       body: JSON.stringify({ action, messageIds }),
     });
@@ -399,7 +399,7 @@ class AdminApiClient {
     if (filters?.startDate) params.append('startDate', filters.startDate);
     if (filters?.endDate) params.append('endDate', filters.endDate);
     
-    window.open(`${API_BASE_URL}/api/admin/messages/export/csv?${params.toString()}`, '_blank');
+    window.open(`${API_BASE_URL}/admin/messages/export/csv?${params.toString()}`, '_blank');
   }
 
   async getActivityLogs(filters?: {
@@ -420,11 +420,11 @@ class AdminApiClient {
     if (filters?.limit) params.append('limit', String(filters.limit));
     if (filters?.offset) params.append('offset', String(filters.offset));
     
-    return this.request(`/api/admin/messages/activity?${params.toString()}`);
+    return this.request(`/admin/messages/activity?${params.toString()}`);
   }
 
   async getEventTypes() {
-    return this.request('/api/admin/messages/activity/event-types');
+    return this.request('/admin/messages/activity/event-types');
   }
 }
 
