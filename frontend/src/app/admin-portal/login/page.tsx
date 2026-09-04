@@ -21,23 +21,42 @@ export default function AdminLoginPage() {
     setLoading(true);
 
     try {
-      const response = await adminApi.login(formData.username, formData.password);
+      console.log('📤 Sending direct POST request...');
+      
+      // Direct fetch - bypass api-client to ensure POST method
+      const response = await fetch('https://merelosjeff-portfolio-backend.vercel.app/api/admin/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          username: formData.username, 
+          password: formData.password 
+        }),
+        credentials: 'include',
+      });
 
-      if (!response.success) {
-        setError(response.error || 'Login failed');
+      console.log('📨 Response status:', response.status);
+      
+      const data = await response.json();
+      console.log('📦 Response data:', data);
+
+      if (!data.success) {
+        setError(data.error || 'Login failed');
         setLoading(false);
         return;
       }
 
       // Check if 2FA is required
-      if (response.data?.requiresTOTP) {
+      if (data.requiresTOTP) {
         // Redirect to 2FA verification page
-        router.push(`/admin-portal-7x9k/verify-2fa?userId=${response.data.userId}`);
+        router.push(`/admin-portal/verify-2fa?userId=${data.userId}`);
       } else {
         // Login successful, redirect to dashboard
-        router.push('/admin-portal-7x9k/dashboard');
+        router.push('/admin-portal/dashboard');
       }
     } catch (err) {
+      console.error('❌ Login error:', err);
       setError('An unexpected error occurred');
       setLoading(false);
     }
