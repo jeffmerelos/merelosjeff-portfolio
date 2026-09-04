@@ -135,7 +135,7 @@ class AuthService {
 
       // Check concurrent sessions and remove oldest if limit exceeded
       const { data: existingSessions } = await supabase
-        .from('sessions')
+        .from('admin_sessions')
         .select('id, created_at')
         .eq('admin_user_id', userId)
         .order('created_at', { ascending: false });
@@ -144,14 +144,14 @@ class AuthService {
         const sessionsToRemove = existingSessions.slice(MAX_CONCURRENT_SESSIONS - 1);
         const idsToRemove = sessionsToRemove.map(s => s.id);
         await supabase
-          .from('sessions')
+          .from('admin_sessions')
           .delete()
           .in('id', idsToRemove);
       }
 
       // Create new session
       const { data: session, error } = await supabase
-        .from('sessions')
+        .from('admin_sessions')
         .insert({
           admin_user_id: userId,
           token_hash: tokenHash,
@@ -196,7 +196,7 @@ class AuthService {
       const tokenHash = this.hashToken(token);
 
       const { data: session, error } = await supabase
-        .from('sessions')
+        .from('admin_sessions')
         .select(`
           *,
           admin_users (
@@ -237,7 +237,7 @@ class AuthService {
 
       // Update last activity
       await supabase
-        .from('sessions')
+        .from('admin_sessions')
         .update({ last_activity_at: now.toISOString() })
         .eq('id', session.id);
 
@@ -267,7 +267,7 @@ class AuthService {
   async deleteSession(sessionId) {
     try {
       const { error } = await supabase
-        .from('sessions')
+        .from('admin_sessions')
         .delete()
         .eq('id', sessionId);
 
@@ -289,7 +289,7 @@ class AuthService {
   async deleteAllUserSessions(userId) {
     try {
       const { error } = await supabase
-        .from('sessions')
+        .from('admin_sessions')
         .delete()
         .eq('admin_user_id', userId);
 
@@ -311,7 +311,7 @@ class AuthService {
   async getUserSessions(userId) {
     try {
       const { data: sessions, error } = await supabase
-        .from('sessions')
+        .from('admin_sessions')
         .select('id, ip_address, user_agent, created_at, last_activity_at, expires_at')
         .eq('admin_user_id', userId)
         .gt('expires_at', new Date().toISOString())
@@ -428,7 +428,7 @@ class AuthService {
   async cleanupExpiredSessions() {
     try {
       const { error } = await supabase
-        .from('sessions')
+        .from('admin_sessions')
         .delete()
         .lt('expires_at', new Date().toISOString());
 

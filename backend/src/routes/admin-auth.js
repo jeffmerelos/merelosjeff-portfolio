@@ -396,7 +396,7 @@ router.delete('/sessions/:sessionId', authenticateAdmin, csrfProtection, async (
     // Verify session belongs to user
     const { supabase } = require('../config/database');
     const { data: session } = await supabase
-      .from('sessions')
+      .from('admin_sessions')
       .select('admin_user_id')
       .eq('id', sessionId)
       .single();
@@ -484,7 +484,7 @@ router.post('/change-password', authenticateAdmin, csrfProtection, passwordChang
     // Delete all other sessions (keep current)
     const { supabase } = require('../config/database');
     await supabase
-      .from('sessions')
+      .from('admin_sessions')
       .delete()
       .eq('admin_user_id', user.id)
       .neq('id', session.id);
