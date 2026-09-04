@@ -7,8 +7,8 @@
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
     "build": "echo 'No build step required for Node.js'",
-    "create-admin": "node scripts/create-admin-user.js",
-    "debug-auth": "node scripts/debug-auth.js"
+    "setup-admin": "node setup-admin-production.js",
+    "check-db": "node check-db.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.47.0",
