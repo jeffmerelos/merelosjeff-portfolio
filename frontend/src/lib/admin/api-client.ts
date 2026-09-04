@@ -122,10 +122,30 @@ class AdminApiClient {
   // ============================================
 
   async login(username: string, password: string) {
-    return this.request('/admin/auth/login', {
-      method: 'POST',
-      body: JSON.stringify({ username, password }),
-    });
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/admin/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+        credentials: 'include',
+      });
+
+      const data = await response.json();
+
+      return {
+        success: data.success,
+        data: data.success ? data : undefined,
+        error: data.error,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        data: undefined,
+        error: error instanceof Error ? error.message : 'Login failed',
+      };
+    }
   }
 
   async verify2FA(userId: string, code: string) {
