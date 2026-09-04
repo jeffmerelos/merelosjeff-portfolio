@@ -21,5 +21,7 @@
       "memory": 1024,
       "maxDuration": 60
     }
-  }
+  },
+  "installCommand": "npm install",
+  "buildCommand": "echo 'Build complete - v1.0.2'"
 }
