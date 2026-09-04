@@ -154,7 +154,7 @@ class AuthService {
         .from('admin_sessions')
         .insert({
           admin_user_id: userId,
-          token_hash: tokenHash,
+          session_token: tokenHash,  // Changed from token_hash to session_token
           ip_address: ipAddress,
           user_agent: userAgent,
           expires_at: expiresAt.toISOString()
@@ -164,7 +164,9 @@ class AuthService {
 
       if (error) {
         console.error('Session creation error:', error);
-        return { success: false, error: 'Failed to create session' };
+        console.error('Error details:', JSON.stringify(error, null, 2));
+        console.error('Attempted insert data:', { admin_user_id: userId, session_token: tokenHash, ip_address: ipAddress, expires_at: expiresAt.toISOString() });
+        return { success: false, error: `Failed to create session: ${error.message || error.code}` };
       }
 
       // Update user's last login
@@ -206,7 +208,7 @@ class AuthService {
             is_active
           )
         `)
-        .eq('token_hash', tokenHash)
+        .eq('session_token', tokenHash)  // Changed from token_hash to session_token
         .single();
 
       if (error || !session) {
