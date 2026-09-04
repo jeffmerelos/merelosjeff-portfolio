@@ -59,12 +59,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         )}
         
         <div className="relative">
-          {icon && (
-            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-cyber-text-muted">
-              {icon}
-            </div>
-          )}
-          
           <input
             ref={ref}
             id={inputId}
@@ -89,6 +83,12 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             `}
             {...props}
           />
+          
+          {icon && (
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-cyber-text-muted pointer-events-none">
+              {icon}
+            </div>
+          )}
         </div>
         
         {error && (
