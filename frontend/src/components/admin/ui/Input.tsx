@@ -17,16 +17,42 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       icon,
       fullWidth = true,
       className = '',
+      id,
+      name,
+      type = 'text',
       ...props
     },
     ref
   ) => {
     const widthStyle = fullWidth ? 'w-full' : '';
+    // Generate a unique ID if not provided
+    const inputId = id || name || `input-${Math.random().toString(36).substr(2, 9)}`;
+    
+    // Determine appropriate autocomplete value based on input type
+    const getAutocompleteValue = () => {
+      if (props.autoComplete) return props.autoComplete;
+      switch (type) {
+        case 'email':
+          return 'email';
+        case 'password':
+          return 'current-password';
+        case 'tel':
+          return 'tel';
+        case 'url':
+          return 'url';
+        case 'text':
+          if (name === 'username') return 'username';
+          if (name === 'name') return 'name';
+          return 'off';
+        default:
+          return 'off';
+      }
+    };
     
     return (
       <div className={`${widthStyle}`}>
         {label && (
-          <label className="block mb-2 text-sm font-medium text-cyber-text-secondary">
+          <label htmlFor={inputId} className="block mb-2 text-sm font-medium text-cyber-text-secondary">
             {label}
             {props.required && <span className="text-cyber-red ml-1">*</span>}
           </label>
@@ -41,6 +67,10 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           
           <input
             ref={ref}
+            id={inputId}
+            type={type}
+            name={name}
+            autoComplete={getAutocompleteValue()}
             className={`
               cyber-input
               w-full px-4 py-3
