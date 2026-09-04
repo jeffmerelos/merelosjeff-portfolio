@@ -123,6 +123,8 @@ class AdminApiClient {
 
   async login(username: string, password: string) {
     try {
+      console.log('📤 Sending login request:', { username, password: '***' });
+      
       const response = await fetch(`${API_BASE_URL}/api/admin/auth/login`, {
         method: 'POST',
         headers: {
@@ -132,7 +134,10 @@ class AdminApiClient {
         credentials: 'include',
       });
 
+      console.log('📨 Login response status:', response.status);
+      
       const data = await response.json();
+      console.log('📦 Login response data:', data);
 
       return {
         success: data.success,
@@ -140,6 +145,7 @@ class AdminApiClient {
         error: data.error,
       };
     } catch (error) {
+      console.error('❌ Login error:', error);
       return {
         success: false,
         data: undefined,
