@@ -723,13 +723,19 @@ router.post('/2fa/regenerate-backup-codes', authenticateAdmin, csrfProtection, b
 
 /**
  * GET /api/admin/auth/health
- * Health check endpoint
+ * Health check endpoint with version info
  */
 router.get('/health', (req, res) => {
   res.json({ 
     success: true, 
     status: 'healthy',
-    timestamp: new Date().toISOString()
+    version: '1.0.3',
+    buildTime: new Date().toISOString(),
+    timestamp: new Date().toISOString(),
+    tables: {
+      sessions: 'admin_sessions',
+      users: 'admin_users'
+    }
   });
 });
 
