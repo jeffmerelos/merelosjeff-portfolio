@@ -45,7 +45,9 @@ const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:3001',
   'https://merelosjeff-portfolio-frontend.vercel.app',
+  'https://stoke-timothy-collar.ngrok-free.dev',
   process.env.CORS_ORIGIN,
+  process.env.FRONTEND_URL,
 ].filter(Boolean);
 
 app.use(
@@ -60,7 +62,7 @@ app.use(
       }
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'x-csrf-token'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-csrf-token', 'ngrok-skip-browser-warning'],
     credentials: true,
   })
 );

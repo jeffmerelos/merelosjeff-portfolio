@@ -7,6 +7,7 @@ const api = axios.create({
   timeout: 30000, // Increased from 10000 to 30 seconds for Vercel cold starts
   headers: { 
     'Content-Type': 'application/json',
+    'ngrok-skip-browser-warning': 'true', // Skip ngrok browser warning
   },
   withCredentials: false, // Important for cross-origin requests
 });
