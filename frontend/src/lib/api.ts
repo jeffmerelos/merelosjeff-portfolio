@@ -104,8 +104,21 @@ export const sendContactMessage = async (payload: {
   message: string;
   website?: string; // honeypot
 }) => {
-  const { data } = await api.post('/contact', payload);
-  return data;
+  // Use Next.js API route instead of external backend
+  const response = await fetch('/api/contact', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({ error: 'Failed to send message' }));
+    throw new Error(errorData.error || 'Failed to send message');
+  }
+
+  return response.json();
 };
 
 // ─── GitHub ─────────────────────────────────────────────────

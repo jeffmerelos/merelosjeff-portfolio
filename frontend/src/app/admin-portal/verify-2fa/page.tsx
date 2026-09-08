@@ -50,7 +50,7 @@ function Verify2FAContent() {
       }
 
       // Success - redirect to dashboard
-      router.push('/admin-portal-7x9k/dashboard');
+      router.push('/admin-portal/dashboard');
     } catch (err) {
       setError('An unexpected error occurred');
       setLoading(false);
